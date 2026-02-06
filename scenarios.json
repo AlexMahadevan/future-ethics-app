@@ -1,0 +1,281 @@
+{
+    "scenarios": [
+        {
+            "id": 1,
+            "title": "The Vibe-Coded Reality",
+            "subtitle": "Everyone is their own aggregator",
+            "story": "By 2033, the traditional news app has vanished. In its place is 'vibe-coding'—a world where anyone can build a custom news experience in seconds using natural language. A high schooler builds an aggregator that pulls raw investigative data from legacy newsrooms, merges it with real-time local environment feeds, and renders the results as an interactive comic book voiced by their favorite influencer. Newsrooms have pivoted from being destinations to being high-trust data wholesalers. They no longer own the front-page; they own the 'verified' raw data feeds that power millions of individual, hyper-personalized news worlds.",
+            "underlyingLogic": "The cost of building software drops to zero, turning audiences into creators and newsrooms into modular data providers.",
+            "strongSignals": [
+                "Vibe coding simplifies app creation for everyone",
+                "Modular news feeds sold as high-trust data units",
+                "The end of 'owned' platforms and aggregated hubs",
+                "Trust verification as the primary product of newsrooms",
+                "Hyper-personalization through DIY customer interfaces"
+            ],
+            "choices": [
+                {
+                    "text": "Become a wholesaler - Sell high-trust raw data feeds to developers and users",
+                    "consequence": "Ensures financial survival and massive reach, but newsrooms lose control over framing and context. The relationship with the audience becomes indirect and purely technical."
+                },
+                {
+                    "text": "Build the 'Super-Vibe' - Create the ultimate personalizable platform for everyone",
+                    "consequence": "Maintains direct audience relationship but requires massive constant innovation to compete with millions of independent DIY apps. Risk of becoming a generic utility."
+                },
+                {
+                    "text": "Niche authenticity - Focus on untouchable, high-context human storytelling",
+                    "consequence": "Preserves the craft and voice of journalism, but potentially limits reach to a small, elite audience willing to leave their custom 'vibes' for a shared perspective."
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "The AI Newsroom",
+            "subtitle": "AI handles production across formats",
+            "story": "The newsroom hums twenty-four hours a day, though only a few humans are present. AI systems scrape satellite feeds, file public records requests, generate early investigative leads, draft multiple versions of stories, test headlines for emotional bias, and run automated fact-checks in seconds. Editors don't assign stories anymore—they audit machine logic. The biggest ethical debates aren't about whether AI should be used, but about which parts of truth humans are still responsible for touching with their own hands.",
+            "underlyingLogic": "Journalism becomes a machine-augmented industrial system, with humans shifting to oversight, meaning-making, and trust repair.",
+            "strongSignals": [
+                "Immersive AI historical correspondents",
+                "AI writes → AI grades → closed-loop automation",
+                "Full automation stack: bias detection, auto rundowns, auto investigations, auto fact-checking, AI disclosure logos",
+                "Explosion of AI-generated local content videos",
+                "AI-driven quality ranking engines",
+                "AI modeling audience behavior + extracting heuristics",
+                "\"Rude FAQs\" for PR stress testing"
+            ],
+            "choices": [
+                {
+                    "text": "Full automation - Let AI handle most production with human oversight",
+                    "consequence": "Massive efficiency gains and 24/7 coverage, but risks losing human judgment in subtle ethical decisions. May produce technically accurate but soulless journalism that misses cultural nuance."
+                },
+                {
+                    "text": "Human-first - Keep AI as tools only, humans make all editorial decisions",
+                    "consequence": "Preserves human judgment and ethical oversight, but can't compete with speed and scale of automated competitors. May become economically unsustainable or serve only niche audiences."
+                },
+                {
+                    "text": "Collaborative intelligence - Define clear boundaries for AI vs human responsibility",
+                    "consequence": "Creates sustainable division of labor where AI handles data processing and humans focus on meaning-making. Requires constant vigilance to maintain boundaries and prevent automation creep."
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "title": "Beyond the Screen",
+            "subtitle": "Ambient, Conversational Journalism",
+            "story": "A college student doesn't open a news app anymore—she talks to it while walking across campus. Her AI assistant whispers breaking updates through her earbuds, projects interactive story worlds onto her glasses, and curates local alerts based on where she stands physically. To understand the Gaza conflict, she steps into a virtual marketplace reconstructed from decades of footage, questions a historical correspondent trained on archived reporting, and leaves with both facts and feeling. Journalism is no longer consumed—it surrounds.",
+            "underlyingLogic": "Journalism becomes embedded in environments, devices, atmospheres, and relationships, not destinations.",
+            "strongSignals": [
+                "Conversational immersive historical journalism",
+                "AI \"zone\" that filters all life information",
+                "Live Q&A news bots replace search",
+                "Music-triggered behavioral environments",
+                "Conversational interfaces flatten sourcing"
+            ],
+            "choices": [
+                {
+                    "text": "Embrace ambient journalism - Build for conversational and immersive platforms",
+                    "consequence": "Reaches audiences where they are and creates deeper engagement through immersion. But risks creating filter bubbles and losing shared public square. Privacy concerns intensify."
+                },
+                {
+                    "text": "Resist fragmentation - Maintain centralized, destination-based journalism",
+                    "consequence": "Preserves common information spaces and easier editorial control, but loses relevance with younger audiences. May become obsolete as consumption patterns shift away from active seeking."
+                },
+                {
+                    "text": "Multi-platform strategy - Adapt content for both traditional and ambient consumption",
+                    "consequence": "Maintains broad reach across generations and platforms. Resource-intensive and risks diluting quality. Requires new skills in spatial storytelling and conversational design."
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "The Fog of Information",
+            "subtitle": "So much data—and so much doubt",
+            "story": "By the mid-2030s, nothing looks fake—and that's the problem. Deepfakes testify in court. AI-written policy memos flood government sites. Corporations hide behind automated bureaucratic language designed to defeat machine readers trying to expose wrongdoing. Citizens deploy their own AI watchdogs to scrape raw data, hunting for patterns behind the deception. News organizations that survive aren't the loudest—but the ones whose verification systems are so visible that trust itself becomes their product.",
+            "underlyingLogic": "Truth becomes contested infrastructure, not an assumed public good.",
+            "strongSignals": [
+                "Burst of AI bubble → reassessing Big Tech",
+                "Transparency vs. obfuscation arms race",
+                "Low-quality AI slop flooding platforms",
+                "Verification becomes a marketing differentiator",
+                "Curated vs interrogated information tension",
+                "PR arms race anticipating scrutiny"
+            ],
+            "choices": [
+                {
+                    "text": "Verification infrastructure - Build transparent, open-source verification systems",
+                    "consequence": "Creates public trust through radical transparency in methods. Expensive to maintain and vulnerable to sophisticated attacks. May need to reveal sources and methods that compromise investigations."
+                },
+                {
+                    "text": "Trust networks - Create webs of vouching between verified humans and institutions",
+                    "consequence": "Leverages social proof and reputation systems. Vulnerable to coordinated manipulation and creates insider/outsider dynamics. May exclude legitimate new voices."
+                },
+                {
+                    "text": "Embrace uncertainty - Teach audiences to navigate ambiguity rather than seek certainty",
+                    "consequence": "More realistic about information landscape and builds critical thinking. Risks paralyzing audiences with doubt or enabling 'both sides' false equivalence. Requires cultural shift."
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "The Post-Platform Rebellion",
+            "subtitle": "Economic and trust realignment after Big Tech collapse",
+            "story": "When the AI bubble bursts, audiences don't rush back to the old platforms—they abandon them. Storytelling returns to the oral traditions from pre-printing times. News organizations, burned by dependency on collapsing tech giants, rebuild through direct membership, live events, micro-payments for story fragments, and community-based distribution. Live and in-person gatherings are the only thing that's valued; everything else is AI slop filled with ads and endless notifications and engagement tactics trying to lure users who have turned away from their devices. Journalists tour like musicians. Investigations are funded like open-source projects. People are highly protective and wary of sharing any data in the digital space for how it might be used against them. The power of distribution returns to people and places. The web no longer owns journalism—communities do.",
+            "underlyingLogic": "Infrastructure collapse leads to economic rewiring, platform exit strategies, decentralized distribution, and public distrust combined with economic survival.",
+            "strongSignals": [
+                "AI bubble bursts → news breaks with Big Tech",
+                "Events & physical presence replace digital reach",
+                "Publishers selling atomic story units to audience agents",
+                "Institutional obfuscation vs citizen transparency"
+            ],
+            "choices": [
+                {
+                    "text": "Community-first - Build local, membership-based journalism ecosystems",
+                    "consequence": "Creates sustainable, trust-based local journalism with deep community ties. Limited scale and reach. May struggle with major national/international stories requiring coordination."
+                },
+                {
+                    "text": "Decentralized networks - Create federated journalism cooperatives",
+                    "consequence": "Enables resource sharing and coordination without platform dependency. Complex governance and potential for fragmentation. Requires new technical infrastructure and cultural norms."
+                },
+                {
+                    "text": "Platform independence - Build owned distribution channels and direct audience relationships",
+                    "consequence": "Maximum control and resilience against platform changes. Expensive and technically demanding. Limits discovery and requires constant audience cultivation."
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "title": "The Algorithmic Editor",
+            "subtitle": "When AI decides what's newsworthy",
+            "story": "Your newsroom's AI system has been analyzing audience data, social signals, and emerging trends for months. It's gotten eerily good at predicting what stories will matter—often before human editors notice. This morning, it's flagging a complex story about municipal water contracts that your editors think is too boring to cover. But the AI insists: based on patterns it's detected, this story will explode into a major scandal within 72 hours. It's already drafted the investigation, identified sources, and allocated resources. Your human editors are skeptical. The AI has been right before, but it's also been spectacularly wrong. And when it's wrong, it's your reputation on the line, not the algorithm's.",
+            "underlyingLogic": "Editorial judgment becomes a negotiation between human intuition and machine prediction, raising questions about accountability and news values.",
+            "strongSignals": [
+                "AI-driven story selection and resource allocation",
+                "Predictive analytics for news impact",
+                "Tension between data-driven and values-driven journalism",
+                "Algorithmic accountability in editorial decisions"
+            ],
+            "choices": [
+                {
+                    "text": "Trust the algorithm - Pursue the story based on AI recommendation",
+                    "consequence": "If right, you break a major story ahead of competitors and prove AI's value. If wrong, you waste resources and damage credibility while ceding editorial judgment to machines."
+                },
+                {
+                    "text": "Human override - Reject AI recommendation and follow editorial instincts",
+                    "consequence": "Preserves human judgment and accountability. Risk missing important stories and falling behind competitors who trust their AI. May create culture of ignoring valuable AI insights."
+                },
+                {
+                    "text": "Compromise - Assign limited resources to investigate AI's hunch",
+                    "consequence": "Balances AI insights with human skepticism. May result in half-hearted coverage that misses the story or wastes resources. Requires clear protocols for AI-human collaboration."
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "title": "The Synthetic Source",
+            "subtitle": "When your best source isn't human",
+            "story": "You're investigating corruption in the city's housing department. Your breakthrough comes from an unexpected source: an AI agent that's been scraping public records, cross-referencing databases, and identifying patterns for months. It's found connections no human could have spotted—shell companies, suspicious timing, hidden relationships. The AI can't testify, can't be cross-examined, and its reasoning is partially opaque even to its creators. But the patterns it's found are real, verified by documents. Traditional journalism says you need human sources. But in an age of AI-assisted investigation, what counts as a source? The story is solid, the public interest is clear, but you're in uncharted ethical territory.",
+            "underlyingLogic": "AI tools blur the line between source and method, challenging traditional journalistic practices around attribution and verification.",
+            "strongSignals": [
+                "AI-powered investigative tools",
+                "Automated pattern recognition in public records",
+                "Questions about algorithmic transparency in journalism",
+                "Evolution of sourcing standards"
+            ],
+            "choices": [
+                {
+                    "text": "Publish with full AI disclosure - Explain the AI's role transparently",
+                    "consequence": "Maintains transparency and pushes journalism forward. May face criticism for relying on 'black box' technology. Sets precedent for AI-assisted investigations."
+                },
+                {
+                    "text": "Use AI as a tip, verify everything with human sources",
+                    "consequence": "Adheres to traditional standards and ensures human accountability. Time-consuming and may be impossible for some AI-discovered patterns. Competitors using AI may break stories first."
+                },
+                {
+                    "text": "Develop new standards - Create protocols for AI-assisted investigations",
+                    "consequence": "Positions your organization as a leader in evolving journalism ethics. Requires time, expertise, and industry buy-in. May face resistance from traditionalists and skepticism from public."
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "title": "The Personalization Dilemma",
+            "subtitle": "When everyone gets their own version of the news",
+            "story": "Your news app now uses AI to personalize every story for each reader. The same article about climate policy appears differently to a farmer in Iowa, a tech worker in San Francisco, and a retiree in Florida—same facts, but framed to resonate with each reader's values and concerns. Engagement is up 300%. People are actually reading complex policy stories. But you've also noticed something troubling: readers in different bubbles are drawing opposite conclusions from the 'same' story. The facts are identical, but the framing shapes interpretation so powerfully that you're essentially publishing different realities. Is this meeting people where they are, or destroying the shared truth that democracy requires?",
+            "underlyingLogic": "Personalization technology forces a choice between engagement and shared reality, between serving individuals and serving society.",
+            "strongSignals": [
+                "AI-powered content personalization",
+                "Tension between engagement and shared public square",
+                "Framing effects on interpretation",
+                "Fragmentation of common information spaces"
+            ],
+            "choices": [
+                {
+                    "text": "Maximize personalization - Optimize for individual engagement and understanding",
+                    "consequence": "Dramatically increases engagement and helps diverse audiences understand complex issues. Accelerates information fragmentation and may undermine democratic deliberation. Hard to reverse once normalized."
+                },
+                {
+                    "text": "Standardize content - Everyone gets the same version to preserve shared reality",
+                    "consequence": "Maintains common information space and editorial control. Lower engagement, especially with audiences who feel misunderstood. May lose relevance as competitors personalize."
+                },
+                {
+                    "text": "Transparent personalization - Show readers how their version differs from others",
+                    "consequence": "Combines engagement benefits with awareness of framing. Complex to implement and may overwhelm users. Could increase media literacy or increase cynicism about journalism."
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "title": "The Deepfake Dilemma",
+            "subtitle": "When seeing is no longer believing",
+            "story": "A video surfaces showing the mayor making racist remarks at a private fundraiser. It's explosive, newsworthy, and appears authentic. Your verification team has analyzed it for 48 hours. The metadata checks out. The lighting and audio are consistent. But your AI detection tools give it a 60% probability of being a deepfake—not conclusive either way. The mayor denies it vehemently, claiming it's a sophisticated fake by political opponents. Your competitors are preparing to run with it. If it's real and you don't publish, you're suppressing important news. If it's fake and you do publish, you're weaponizing AI-generated disinformation. In the age of perfect fakes, how do you decide what's true?",
+            "underlyingLogic": "Deepfake technology undermines visual evidence as a foundation of truth, forcing journalism to develop new verification standards.",
+            "strongSignals": [
+                "Sophisticated deepfake technology",
+                "Erosion of trust in visual evidence",
+                "Arms race between creation and detection",
+                "Political weaponization of fake accusations"
+            ],
+            "choices": [
+                {
+                    "text": "Publish with caveats - Run the story but explain verification uncertainty",
+                    "consequence": "Maintains news value while being transparent about limitations. May confuse audiences or be seen as hedging. Sets precedent for publishing unverifiable content."
+                },
+                {
+                    "text": "Wait for certainty - Don't publish until you can definitively verify",
+                    "consequence": "Maintains high standards and avoids spreading potential disinformation. May mean never publishing as certainty becomes impossible. Competitors may break story first."
+                },
+                {
+                    "text": "Shift burden of proof - Require the source to prove authenticity before considering publication",
+                    "consequence": "Protects against disinformation but may exclude legitimate whistleblowers who can't provide technical proof. Changes relationship with sources and may miss important stories."
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "title": "The Attention Economy Endgame",
+            "subtitle": "When AI optimizes for engagement at all costs",
+            "story": "Your organization's survival depends on an AI system that optimizes every aspect of your journalism for engagement. It's working—revenue is up, layoffs have stopped, and you're hiring again. But you've noticed the AI is subtly pushing coverage toward outrage, conflict, and emotional triggers. It's not fake news, but it's not the journalism you set out to do either. Yesterday, the AI recommended killing a nuanced investigation into housing policy in favor of a rage-inducing story about a local official's offensive tweet. The tweet story will get 10x the engagement. The housing story might change lives. Your business model says follow the AI. Your journalistic values say resist it. But if you resist and the business fails, there's no journalism at all.",
+            "underlyingLogic": "AI optimization for engagement creates a tension between financial sustainability and journalistic mission.",
+            "strongSignals": [
+                "AI-driven content optimization",
+                "Engagement metrics driving editorial decisions",
+                "Tension between business model and mission",
+                "Algorithmic amplification of outrage"
+            ],
+            "choices": [
+                {
+                    "text": "Follow the AI - Prioritize engagement to ensure financial survival",
+                    "consequence": "Keeps organization alive and employed. Gradually erodes journalistic mission and public trust. May contribute to toxic information ecosystem. Hard to reverse cultural shift."
+                },
+                {
+                    "text": "Resist optimization - Maintain editorial independence from AI recommendations",
+                    "consequence": "Preserves journalistic integrity and mission. Risks financial failure and organizational collapse. May become unsustainable as competitors optimize for engagement."
+                },
+                {
+                    "text": "Constrained optimization - Set ethical boundaries for AI recommendations",
+                    "consequence": "Attempts to balance sustainability and values. Complex to implement and may satisfy neither business nor editorial needs. Requires ongoing negotiation of boundaries."
+                }
+            ]
+        }
+    ]
+}
