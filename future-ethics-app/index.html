@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Ethics Decision Game | Poynter Institute</title>
+    <meta name="description"
+        content="Interactive workshop game exploring ethical decisions in future journalism scenarios">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-content">
+                <h1 class="main-title">Future Ethics</h1>
+                <p class="subtitle">AI Journalism Decision Game</p>
+                <p class="description">
+                    Explore 10 future scenarios and identify the ethical decisions newsrooms will need to make.
+                </p>
+
+                <div class="team-input-container">
+                    <label for="team-name">Enter Your Team Name</label>
+                    <input type="text" id="team-name" placeholder="e.g., Team Phoenix" autocomplete="off">
+                </div>
+
+                <button id="start-btn" class="primary-btn" disabled>
+                    Begin Journey
+                    <span class="btn-arrow">→</span>
+                </button>
+
+                <div class="poynter-credit">
+                    <p>A workshop tool by the Poynter Institute</p>
+                    <button id="reset-session-link" class="text-link-btn">Reset Session</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selection Screen (Phase 1) -->
+        <div id="selection-screen" class="screen">
+            <div class="selection-container">
+                <h1 class="screen-title">Choose Your Scenario</h1>
+                <p class="screen-subtitle">Select a future journalism scenario to explore</p>
+                <div id="scenarios-grid" class="scenarios-grid">
+                    <!-- Scenario cards will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Ethical Issues Screen (Phase 2) -->
+        <div id="ethics-screen" class="screen">
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-badge">Phase 1: Ethical Issues</span>
+                    <h2 id="ethics-scenario-title" class="scenario-title"></h2>
+                </div>
+
+                <div class="phase-layout">
+                    <div class="scenario-info-panel">
+                        <div class="info-group">
+                            <h4>The Story</h4>
+                            <p id="ethics-story-text"></p>
+                        </div>
+                        <div class="info-group">
+                            <h4>Strong Signals</h4>
+                            <ul id="ethics-signals-list"></ul>
+                        </div>
+                        <div class="info-group">
+                            <h4>Potential Paths Forward</h4>
+                            <div id="ethics-choices-list" class="choices-list"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-panel">
+                        <h3>What ethical issues do you see?</h3>
+                        <p class="input-hint">List the main ethical challenges or concerns this scenario presents. <span id="issues-count" class="count-badge">0 issues identified</span></p>
+
+                        <div class="issue-input-container">
+                            <textarea id="issue-input" placeholder="e.g., Loss of human editorial oversight..."
+                                rows="3"></textarea>
+                            <button id="add-issue-btn" class="secondary-btn">Add Issue</button>
+                        </div>
+
+                        <div id="issues-list" class="issues-list">
+                            <!-- Added issues will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation mt-auto">
+                    <button id="ethics-back-btn" class="nav-btn secondary-btn">
+                        <span class="btn-arrow">←</span> Back to Scenarios
+                    </button>
+                    <button id="ethics-next-btn" class="nav-btn primary-btn" disabled>
+                        Next: Safeguards <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safeguards Screen (Phase 3) -->
+        <div id="safeguards-screen" class="screen">
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-badge">Phase 2: Safeguards & Guidelines</span>
+                    <h2 id="safeguards-scenario-title" class="scenario-title"></h2>
+                </div>
+
+                <div class="phase-layout">
+                    <div class="scenario-info-panel">
+                        <div class="info-group">
+                            <h4>Selected Ethical Issues</h4>
+                            <ul id="selected-issues-list"></ul>
+                        </div>
+                    </div>
+
+                    <div class="input-panel">
+                        <h3>Safeguards & New Ethics Guidelines</h3>
+                        <p class="input-hint">Add safeguards, policies, or guidelines your newsroom would implement. <span id="safeguards-count" class="count-badge">0 safeguards added</span></p>
+
+                        <div class="safeguard-input-container">
+                            <textarea id="safeguard-input" placeholder="e.g., Require human review for all AI-generated content before publication..." rows="3"></textarea>
+
+                            <div class="safeguard-tags-input">
+                                <label>Tag this safeguard:</label>
+                                <div class="tag-checkboxes-inline">
+                                    <label class="tag-checkbox-small">
+                                        <input type="checkbox" value="Technical">
+                                        <span>Technical</span>
+                                    </label>
+                                    <label class="tag-checkbox-small">
+                                        <input type="checkbox" value="Editorial Policy">
+                                        <span>Editorial</span>
+                                    </label>
+                                    <label class="tag-checkbox-small">
+                                        <input type="checkbox" value="Training">
+                                        <span>Training</span>
+                                    </label>
+                                    <label class="tag-checkbox-small">
+                                        <input type="checkbox" value="Transparency">
+                                        <span>Transparency</span>
+                                    </label>
+                                    <label class="tag-checkbox-small">
+                                        <input type="checkbox" value="Organizational">
+                                        <span>Organizational</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button id="add-safeguard-btn" class="secondary-btn">Add Safeguard</button>
+                        </div>
+
+                        <div id="safeguards-list" class="safeguards-list">
+                            <!-- Added safeguards will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation mt-auto">
+                    <button id="safeguards-back-btn" class="nav-btn secondary-btn">
+                        <span class="btn-arrow">←</span> Back to Issues
+                    </button>
+                    <button id="safeguards-next-btn" class="nav-btn primary-btn" disabled>
+                        Next: Reflection <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflection Screen -->
+        <div id="reflection-screen" class="screen">
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-badge">Phase 3: Reflection</span>
+                    <h2 id="reflection-scenario-title" class="scenario-title"></h2>
+                </div>
+
+                <div class="reflection-content">
+                    <p class="reflection-intro">Before we finish, take a moment to reflect on your decision-making process.</p>
+
+                    <div class="reflection-question">
+                        <label for="reflection-hardest">What was the hardest part of this scenario to decide?</label>
+                        <textarea id="reflection-hardest" rows="3" placeholder="What made this challenging?"></textarea>
+                    </div>
+
+                    <div class="reflection-question">
+                        <label for="reflection-disagreement">Where did your team disagree most?</label>
+                        <textarea id="reflection-disagreement" rows="3" placeholder="What points of tension emerged?"></textarea>
+                    </div>
+
+                    <div class="reflection-question">
+                        <label for="reflection-confidence">How confident are you in these safeguards?</label>
+                        <div class="confidence-scale">
+                            <input type="range" id="reflection-confidence" min="1" max="5" value="3">
+                            <div class="confidence-labels">
+                                <span>Not confident</span>
+                                <span id="confidence-value">3</span>
+                                <span>Very confident</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation mt-auto">
+                    <button id="reflection-back-btn" class="nav-btn secondary-btn">
+                        <span class="btn-arrow">←</span> Back to Safeguards
+                    </button>
+                    <button id="reflection-finish-btn" class="nav-btn primary-btn">
+                        View Final Summary <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Screen -->
+        <div id="summary-screen" class="screen">
+            <div class="summary-container">
+                <h1 class="summary-title">Future Ethics Roadmap</h1>
+                <p class="summary-subtitle" id="team-name-display"></p>
+
+                <div id="summary-content" class="summary-content">
+                    <!-- Final results will be rendered here -->
+                </div>
+
+                <div class="summary-actions">
+                    <button id="export-btn" class="secondary-btn">
+                        Export Results
+                    </button>
+                    <button id="restart-btn" class="primary-btn">
+                        Start New Session
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Saving to Airtable...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js" onerror="console.log('config.js not found, using local storage only')"></script>
+    <script>
+        // Fallback if config.js is not present (e.g., on GitHub Pages)
+        if (typeof AIRTABLE_CONFIG === 'undefined') {
+            var AIRTABLE_CONFIG = { apiKey: '', baseId: '', tableName: '', get apiUrl() { return ''; } };
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

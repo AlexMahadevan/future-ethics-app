@@ -1,0 +1,14 @@
+# Add this to your .gitignore to avoid committing sensitive credentials
+
+# Airtable credentials
+config.js
+config.production.js
+
+# System files
+.DS_Store
+.vscode/
+*.log
+
+# Dependencies (if you add any build tools later)
+node_modules/
+venv/
