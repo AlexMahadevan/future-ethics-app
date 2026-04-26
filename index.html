@@ -27,7 +27,7 @@
                 <h1 class="main-title">Future Ethics</h1>
                 <p class="subtitle">AI Journalism Decision Game</p>
                 <p class="description">
-                    Explore 10 future scenarios and identify the ethical decisions newsrooms will need to make.
+                    Explore 5 future scenarios and identify the ethical decisions newsrooms will need to make.
                 </p>
 
                 <div class="team-input-container">
@@ -37,20 +37,22 @@
 
                 <button id="start-btn" class="primary-btn" disabled>
                     Begin Journey
-                    <span class="btn-arrow">→</span>
+                    <span class="btn-arrow">&rarr;</span>
                 </button>
 
                 <div class="poynter-credit">
                     <p>A workshop tool by the Poynter Institute</p>
                     <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.8;">
-                        <a href="https://www.poynter.org/ai-ethics-journalism/ai-ethics-guidelines/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Read Poynter's AI Ethics Guidelines →</a>
+                        <a href="https://www.poynter.org/ai-ethics-journalism/ai-ethics-guidelines/" target="_blank"
+                            rel="noopener" style="color: inherit; text-decoration: underline;">Read Poynter's AI Ethics
+                            Guidelines &rarr;</a>
                     </p>
                     <button id="reset-session-link" class="text-link-btn">Reset Session</button>
                 </div>
             </div>
         </div>
 
-        <!-- Selection Screen (Phase 1) -->
+        <!-- Selection Screen -->
         <div id="selection-screen" class="screen">
             <div class="selection-container">
                 <h1 class="screen-title">Choose Your Scenario</h1>
@@ -61,38 +63,126 @@
             </div>
         </div>
 
+        <!-- Path Selection Screen -->
+        <div id="path-screen" class="screen">
+            <div class="phase-container">
+                <div class="progress-stepper">
+                    <div class="step active">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Choose Path</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Issues</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Safeguards</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Reflection</span>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-bar hidden">
+                    <span class="timer-display"></span>
+                </div>
+
+                <div class="phase-header">
+                    <h2 id="path-scenario-title" class="scenario-title"></h2>
+                </div>
+
+                <div class="path-story">
+                    <button class="story-toggle" id="story-toggle">
+                        <h4>The Story <span class="toggle-icon" id="toggle-icon">+</span></h4>
+                    </button>
+                    <div class="story-body collapsed" id="story-body">
+                        <p id="path-story-text"></p>
+                        <div class="path-signals">
+                            <h4>Strong Signals</h4>
+                            <ul id="path-signals-list"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="path-selection">
+                    <h3 class="path-prompt">Your newsroom faces this future. Which path do you take?</h3>
+                    <div id="paths-grid" class="paths-grid">
+                        <!-- Path cards will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="navigation mt-auto">
+                    <button id="path-back-btn" class="nav-btn secondary-btn">
+                        <span class="btn-arrow">&larr;</span> Scenarios
+                    </button>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
         <!-- Ethical Issues Screen (Phase 2) -->
         <div id="ethics-screen" class="screen">
             <div class="phase-container">
+                <div class="progress-stepper">
+                    <div class="step completed">
+                        <span class="step-number">&#10003;</span>
+                        <span class="step-label">Path</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step active">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Issues</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Safeguards</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Reflection</span>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-bar hidden">
+                    <span class="timer-display"></span>
+                </div>
+
                 <div class="phase-header">
-                    <span class="phase-badge">Phase 1: Ethical Issues</span>
+                    <span class="phase-badge">Phase 2: Ethical Issues</span>
                     <h2 id="ethics-scenario-title" class="scenario-title"></h2>
+                </div>
+
+                <div class="chosen-path-banner" id="chosen-path-banner">
+                    <span class="chosen-path-label">Your chosen path:</span>
+                    <span class="chosen-path-text" id="chosen-path-text"></span>
                 </div>
 
                 <div class="phase-layout">
                     <div class="scenario-info-panel">
                         <div class="info-group">
-                            <h4>The Story</h4>
-                            <p id="ethics-story-text"></p>
-                        </div>
-                        <div class="info-group">
-                            <h4>Strong Signals</h4>
-                            <ul id="ethics-signals-list"></ul>
-                        </div>
-                        <div class="info-group">
-                            <h4>Potential Paths Forward</h4>
-                            <div id="ethics-choices-list" class="choices-list"></div>
+                            <h4>The Tension</h4>
+                            <p id="ethics-tension-text"></p>
                         </div>
                     </div>
 
                     <div class="input-panel">
-                        <h3>What ethical issues do you see?</h3>
-                        <p class="input-hint">List the main ethical challenges or concerns this scenario presents. <span id="issues-count" class="count-badge">0 issues identified</span></p>
+                        <h3>What ethical issues does this path create?</h3>
+                        <p class="input-hint">Given the path your team chose, what ethical challenges arise? <span
+                                id="issues-count" class="count-badge">0 issues</span></p>
 
                         <div class="issue-input-container">
                             <textarea id="issue-input" placeholder="e.g., Loss of human editorial oversight..."
-                                rows="3"></textarea>
-                            <button id="add-issue-btn" class="secondary-btn">Add Issue</button>
+                                rows="2"></textarea>
+                            <button id="add-issue-btn" class="add-btn">+ Add Issue</button>
                         </div>
 
                         <div id="issues-list" class="issues-list">
@@ -103,10 +193,10 @@
 
                 <div class="navigation mt-auto">
                     <button id="ethics-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">←</span> Back to Scenarios
+                        <span class="btn-arrow">&larr;</span> Change Path
                     </button>
                     <button id="ethics-next-btn" class="nav-btn primary-btn" disabled>
-                        Next: Safeguards <span class="btn-arrow">→</span>
+                        Next: Safeguards <span class="btn-arrow">&rarr;</span>
                     </button>
                 </div>
             </div>
@@ -115,53 +205,73 @@
         <!-- Safeguards Screen (Phase 3) -->
         <div id="safeguards-screen" class="screen">
             <div class="phase-container">
+                <div class="progress-stepper">
+                    <div class="step completed">
+                        <span class="step-number">&#10003;</span>
+                        <span class="step-label">Path</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step completed">
+                        <span class="step-number">&#10003;</span>
+                        <span class="step-label">Issues</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step active">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Safeguards</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Reflection</span>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-bar hidden">
+                    <span class="timer-display"></span>
+                </div>
+
                 <div class="phase-header">
-                    <span class="phase-badge">Phase 2: Safeguards & Guidelines</span>
+                    <span class="phase-badge">Phase 3: Safeguards & Guidelines</span>
                     <h2 id="safeguards-scenario-title" class="scenario-title"></h2>
                 </div>
 
                 <div class="phase-layout">
                     <div class="scenario-info-panel">
                         <div class="info-group">
-                            <h4>Selected Ethical Issues</h4>
+                            <h4>Your Chosen Path</h4>
+                            <p id="safeguards-chosen-path"></p>
+                        </div>
+                        <div class="info-group">
+                            <h4>Your Ethical Issues</h4>
                             <ul id="selected-issues-list"></ul>
                         </div>
                     </div>
 
                     <div class="input-panel">
                         <h3>Safeguards & New Ethics Guidelines</h3>
-                        <p class="input-hint">Add safeguards, policies, or guidelines your newsroom would implement. <span id="safeguards-count" class="count-badge">0 safeguards added</span></p>
+                        <p class="input-hint">What policies would your newsroom implement to address these issues?
+                            <span id="safeguards-count" class="count-badge">0 safeguards</span>
+                        </p>
 
                         <div class="safeguard-input-container">
-                            <textarea id="safeguard-input" placeholder="e.g., Require human review for all AI-generated content before publication..." rows="3"></textarea>
+                            <textarea id="safeguard-input"
+                                placeholder="e.g., Require human review for all AI-generated content before publication..."
+                                rows="2"></textarea>
 
                             <div class="safeguard-tags-input">
-                                <label>Tag this safeguard:</label>
-                                <div class="tag-checkboxes-inline">
-                                    <label class="tag-checkbox-small">
-                                        <input type="checkbox" value="Technical">
-                                        <span>Technical</span>
-                                    </label>
-                                    <label class="tag-checkbox-small">
-                                        <input type="checkbox" value="Editorial Policy">
-                                        <span>Editorial</span>
-                                    </label>
-                                    <label class="tag-checkbox-small">
-                                        <input type="checkbox" value="Training">
-                                        <span>Training</span>
-                                    </label>
-                                    <label class="tag-checkbox-small">
-                                        <input type="checkbox" value="Transparency">
-                                        <span>Transparency</span>
-                                    </label>
-                                    <label class="tag-checkbox-small">
-                                        <input type="checkbox" value="Organizational">
-                                        <span>Organizational</span>
-                                    </label>
+                                <span class="tags-label">Tag (optional):</span>
+                                <div class="tag-pills-inline" id="tag-pills">
+                                    <button type="button" class="tag-toggle" data-value="Technical">Technical</button>
+                                    <button type="button" class="tag-toggle" data-value="Editorial">Editorial</button>
+                                    <button type="button" class="tag-toggle" data-value="Training">Training</button>
+                                    <button type="button" class="tag-toggle" data-value="Transparency">Transparency</button>
+                                    <button type="button" class="tag-toggle" data-value="Organizational">Organizational</button>
                                 </div>
                             </div>
 
-                            <button id="add-safeguard-btn" class="secondary-btn">Add Safeguard</button>
+                            <button id="add-safeguard-btn" class="add-btn">+ Add Safeguard</button>
                         </div>
 
                         <div id="safeguards-list" class="safeguards-list">
@@ -172,34 +282,64 @@
 
                 <div class="navigation mt-auto">
                     <button id="safeguards-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">←</span> Back to Issues
+                        <span class="btn-arrow">&larr;</span> Back to Issues
                     </button>
                     <button id="safeguards-next-btn" class="nav-btn primary-btn" disabled>
-                        Next: Reflection <span class="btn-arrow">→</span>
+                        Next: Reflection <span class="btn-arrow">&rarr;</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Reflection Screen -->
+        <!-- Reflection Screen (Phase 4) -->
         <div id="reflection-screen" class="screen">
             <div class="phase-container">
+                <div class="progress-stepper">
+                    <div class="step completed">
+                        <span class="step-number">&#10003;</span>
+                        <span class="step-label">Path</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step completed">
+                        <span class="step-number">&#10003;</span>
+                        <span class="step-label">Issues</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step completed">
+                        <span class="step-number">&#10003;</span>
+                        <span class="step-label">Safeguards</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step active">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Reflection</span>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-bar hidden">
+                    <span class="timer-display"></span>
+                </div>
+
                 <div class="phase-header">
-                    <span class="phase-badge">Phase 3: Reflection</span>
+                    <span class="phase-badge">Phase 4: Reflection</span>
                     <h2 id="reflection-scenario-title" class="scenario-title"></h2>
                 </div>
 
                 <div class="reflection-content">
-                    <p class="reflection-intro">Before we finish, take a moment to reflect on your decision-making process.</p>
+                    <p class="reflection-intro">Before we finish, take a moment to reflect on your decision-making
+                        process.</p>
 
                     <div class="reflection-question">
                         <label for="reflection-hardest">What was the hardest part of this scenario to decide?</label>
-                        <textarea id="reflection-hardest" rows="3" placeholder="What made this challenging?"></textarea>
+                        <textarea id="reflection-hardest" rows="3"
+                            placeholder="What made this challenging?"></textarea>
                     </div>
 
                     <div class="reflection-question">
                         <label for="reflection-disagreement">Where did your team disagree most?</label>
-                        <textarea id="reflection-disagreement" rows="3" placeholder="What points of tension emerged?"></textarea>
+                        <textarea id="reflection-disagreement" rows="3"
+                            placeholder="What points of tension emerged?"></textarea>
                     </div>
 
                     <div class="reflection-question">
@@ -217,10 +357,10 @@
 
                 <div class="navigation mt-auto">
                     <button id="reflection-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">←</span> Back to Safeguards
+                        <span class="btn-arrow">&larr;</span> Back to Safeguards
                     </button>
                     <button id="reflection-finish-btn" class="nav-btn primary-btn">
-                        View Final Summary <span class="btn-arrow">→</span>
+                        View Final Summary <span class="btn-arrow">&rarr;</span>
                     </button>
                 </div>
             </div>
@@ -262,6 +402,7 @@
             var AIRTABLE_CONFIG = { apiKey: '', baseId: '', tableName: '', get apiUrl() { return ''; } };
         }
     </script>
+    <script src="scenarios-fallback.js"></script>
     <script src="app.js"></script>
 </body>
 

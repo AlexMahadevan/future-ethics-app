@@ -1,0 +1,157 @@
+// Auto-generated fallback — copy of scenarios.json for offline use
+var SCENARIOS_FALLBACK = [
+  {
+    "id": 1,
+    "title": "The Vibe-Coded Reality",
+    "subtitle": "Everyone is their own aggregator",
+    "story": "By 2033, the traditional news app has vanished. In its place is 'vibe-coding'\u2014a world where anyone can build a custom news experience in seconds using natural language. A high schooler builds an aggregator that pulls raw investigative data from legacy newsrooms, merges it with real-time local environment feeds, and renders the results as an interactive comic book voiced by their favorite influencer. Newsrooms have pivoted from being destinations to being high-trust data wholesalers. They no longer own the front-page; they own the 'verified' raw data feeds that power millions of individual, hyper-personalized news worlds.",
+    "strongSignals": [
+      "Vibe coding simplifies app creation for everyone",
+      "Modular news feeds sold as high-trust data units",
+      "The end of 'owned' platforms and aggregated hubs",
+      "Decentralized protocols (AT Protocol/Bluesky) give users control over feeds and algorithms",
+      "Trust verification as the primary product of newsrooms",
+      "Hyper-personalization through DIY customer interfaces"
+    ],
+    "paths": [
+      {
+        "text": "Become a wholesaler",
+        "description": "Sell high-trust raw data feeds to developers and users. Newsrooms become invisible infrastructure.",
+        "tension": "Ensures financial survival and massive reach, but newsrooms lose control over framing and context. The relationship with the audience becomes indirect and purely technical."
+      },
+      {
+        "text": "Build the 'Super-Vibe'",
+        "description": "Create the ultimate personalizable platform that everyone uses as their starting point.",
+        "tension": "Maintains direct audience relationship but requires massive constant innovation to compete with millions of independent DIY apps. Risk of becoming a generic utility."
+      },
+      {
+        "text": "Niche authenticity",
+        "description": "Focus on untouchable, high-context human storytelling that can't be remixed or disaggregated.",
+        "tension": "Preserves the craft and voice of journalism, but potentially limits reach to a small, elite audience willing to leave their custom 'vibes' for a shared perspective."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Beyond the Screen",
+    "subtitle": "Ambient, conversational journalism",
+    "story": "A college student doesn't open a news app anymore\u2014she talks to it while walking across campus. Her AI assistant whispers breaking updates through her earbuds, projects interactive story worlds onto her glasses, and curates local alerts based on where she stands physically. To understand the Gaza conflict, she steps into a virtual marketplace reconstructed from decades of footage, questions a historical correspondent trained on archived reporting, and leaves with both facts and feeling. Journalism is no longer consumed\u2014it surrounds.",
+    "strongSignals": [
+      "Conversational immersive historical journalism",
+      "AI 'zone' that filters all life information",
+      "Live Q&A news bots replace search",
+      "Music-triggered behavioral environments",
+      "Conversational interfaces flatten sourcing"
+    ],
+    "paths": [
+      {
+        "text": "Embrace ambient journalism",
+        "description": "Build for conversational and immersive platforms. Meet audiences wherever they are, in whatever form they want.",
+        "tension": "Reaches audiences where they are and creates deeper engagement through immersion. But risks creating filter bubbles and losing shared public square. Privacy concerns intensify."
+      },
+      {
+        "text": "Own the trust layer",
+        "description": "Don't build ambient experiences \u2014 become the verification infrastructure underneath them. When AI assistants deliver news, your system certifies it's real.",
+        "tension": "Gives you enormous invisible power over what's considered trustworthy. But you're a gatekeeper without direct accountability to audiences. What happens when your certification is wrong? And who audits the auditor?"
+      },
+      {
+        "text": "Multi-platform strategy",
+        "description": "Adapt content for both traditional and ambient consumption. Same journalism, every surface.",
+        "tension": "Maintains broad reach across generations and platforms. Resource-intensive and risks diluting quality. Requires new skills in spatial storytelling and conversational design."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "The AI-Powered Newsroom",
+    "subtitle": "When AI runs production, picks stories, and chases engagement",
+    "story": "The newsroom hums twenty-four hours a day, though only a few humans remain. AI systems draft stories, test headlines for emotional bias, and run automated fact-checks in seconds. But the machines don't just produce\u2014they decide. The AI flags a municipal water contract story it predicts will explode into a scandal within 72 hours, overriding skeptical editors. Meanwhile, it's also quietly optimizing everything for engagement, pushing coverage toward outrage and conflict. Yesterday it recommended killing a nuanced housing investigation in favor of a rage-inducing tweet story\u201410x the clicks. Revenue is up, layoffs have stopped. But the journalism feels different. Editors don't assign stories anymore\u2014they audit machine logic and negotiate with algorithms. The biggest debates aren't about whether AI should be used, but about who's really in charge: the humans, the data, or the business model.",
+    "strongSignals": [
+      "AI writes \u2192 AI grades \u2192 closed-loop automation",
+      "Full automation stack: bias detection, auto rundowns, auto investigations, auto fact-checking",
+      "AI-driven story selection and predictive analytics for news impact",
+      "Engagement metrics driving editorial decisions",
+      "Algorithmic amplification of outrage over substance",
+      "Tension between data-driven and values-driven journalism"
+    ],
+    "paths": [
+      {
+        "text": "Full automation with guardrails",
+        "description": "Let AI run production and editorial, but set ethical boundaries on optimization.",
+        "tension": "Massive efficiency and 24/7 coverage. But who sets the boundaries? They'll be tested constantly by business pressure. Risks gradual erosion as each exception becomes the new normal."
+      },
+      {
+        "text": "Human-first",
+        "description": "Keep AI as tools only. Humans make all editorial and business decisions.",
+        "tension": "Preserves human judgment and accountability. But can't compete with speed and scale of automated competitors. May become economically unsustainable. If the business fails, there's no journalism at all."
+      },
+      {
+        "text": "Separation of powers",
+        "description": "AI handles production, humans own editorial judgment, and a firewall protects both from engagement optimization.",
+        "tension": "Creates clear accountability and prevents automation creep. Requires constant vigilance and institutional courage. The firewall will be tested every quarter when revenue dips."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "The AI Investigative Engine",
+    "subtitle": "When machines find the stories humans can't",
+    "story": "By 2030, the best investigative journalism doesn't start with a tip from a human source\u2014it starts with an AI agent that never sleeps. These systems continuously scrape public records, cross-reference corporate filings, track money flows across jurisdictions, and surface patterns that would take human reporters years to find. The biggest corruption expos\u00e9s of the decade were all machine-discovered: shell company networks, insider trading rings, environmental violations hidden across thousands of permit applications. Newsrooms that can't afford AI investigative infrastructure simply miss the stories. The ones that have it face a different problem: their most powerful reporting tool is a black box. The AI can show you the pattern, but it can't explain its reasoning in court, can't be cross-examined, and sometimes finds connections that are statistically significant but journalistically meaningless. The line between 'source' and 'method' has dissolved. Traditional sourcing standards\u2014built for a world of human tipsters and document leaks\u2014feel like rules for a game nobody plays anymore.",
+    "strongSignals": [
+      "AI-powered investigative tools becoming standard at major outlets",
+      "Automated pattern recognition in public records at scale",
+      "Growing gap between AI-equipped and AI-lacking newsrooms",
+      "Questions about algorithmic transparency and explainability",
+      "Evolution of sourcing and attribution standards",
+      "Courts and regulators struggling with AI-generated evidence"
+    ],
+    "paths": [
+      {
+        "text": "AI-first investigations",
+        "description": "Build your investigative pipeline around AI discovery. Humans verify and contextualize what machines find.",
+        "tension": "Catches stories no human could find. But creates dependency on opaque systems and raises questions about what happens when the AI is wrong. Sets precedent that machines drive the journalism."
+      },
+      {
+        "text": "Human-led, AI-assisted",
+        "description": "Reporters lead investigations. AI is one tool among many\u2014useful but never the driver.",
+        "tension": "Preserves traditional accountability and sourcing standards. But misses the patterns only machines can see, and falls behind competitors who let AI lead. May be a principled stand that costs you the story."
+      },
+      {
+        "text": "New standards for a new era",
+        "description": "Develop entirely new frameworks for AI-driven journalism: transparency protocols, explainability requirements, and disclosure standards.",
+        "tension": "Positions your organization as a leader in evolving journalism ethics. But requires time, expertise, and industry buy-in that may never come. Meanwhile, competitors ship stories while you write frameworks."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "The Post-Truth Newsroom",
+    "subtitle": "When all evidence is suspect by default",
+    "story": "By the mid-2030s, nothing looks fake\u2014and that's the problem. Deepfakes testify in court. AI-generated documents are indistinguishable from originals. Every photo, video, and audio recording arrives with an asterisk: *this might not be real.* The concept of 'seeing is believing' is dead. Newsrooms have been forced to rebuild verification from the ground up. Every piece of media now requires provenance tracking, chain-of-custody documentation, and multi-source corroboration before it can be used. Some newsrooms have built entire verification departments that rival their reporting staff. Others have partnered with tech companies to use AI detection tools\u2014but those tools are locked in an arms race with the generators, and they're losing. The public has adapted too, but not in the way journalists hoped. Instead of demanding better verification, many people have simply decided that nothing is trustworthy\u2014and retreated into information tribes where 'truth' is whatever the group believes. Journalism's oldest promise\u2014we show you what's real\u2014has never been harder to keep.",
+    "strongSignals": [
+      "Sophisticated deepfake technology indistinguishable from reality",
+      "Arms race between AI generation and AI detection",
+      "Erosion of trust in all visual and audio evidence",
+      "Political weaponization of 'it's a deepfake' as universal denial",
+      "Verification becoming as resource-intensive as reporting itself",
+      "Public retreat into information tribes over shared reality"
+    ],
+    "paths": [
+      {
+        "text": "Verification as the product",
+        "description": "Make provenance and verification your core offering. Every piece of content comes with a transparent chain of evidence.",
+        "tension": "Builds trust through radical transparency. But verification at scale is expensive, slows publishing, and may require revealing sources and methods. Audiences may not value what they can't see."
+      },
+      {
+        "text": "Trust networks",
+        "description": "Build webs of mutual verification between journalists, institutions, and authenticated sources. Trust is earned and networked, not proven per-piece.",
+        "tension": "Leverages social proof and institutional reputation. But creates insider/outsider dynamics, is vulnerable to coordinated manipulation, and may exclude legitimate new voices who haven't earned trust yet."
+      },
+      {
+        "text": "Embrace uncertainty",
+        "description": "Stop pretending certainty is achievable. Teach audiences to navigate ambiguity and probability rather than seeking definitive truth.",
+        "tension": "More honest about the information landscape and builds critical thinking. But risks paralyzing audiences with doubt, enabling 'both sides' false equivalence, and giving bad actors cover to dismiss real evidence."
+      }
+    ]
+  }
+];
