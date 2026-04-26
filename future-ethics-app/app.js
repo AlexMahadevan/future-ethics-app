@@ -4,9 +4,20 @@
 
 let gameState = {
     teamName: '',
-    selectedScenario: null, // { scenarioObj, issues: [], safeguards: [{text: '', tags: []}], reflection: {} }
+    selectedScenario: null,
+    // shape: { scenarioObj, chosenPath: {text, description, tension}, issues: [], safeguards: [{text, tags}], reflection: {} }
     scenarios: []
 };
+
+let timerInterval = null;
+let timerEndTime = null;
+
+// Sanitize user input before inserting into DOM
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
 
 // ===================================
 // Initialize App
@@ -28,8 +39,13 @@ async function loadScenarios() {
         const data = await response.json();
         gameState.scenarios = data.scenarios;
     } catch (error) {
-        console.error('Error loading scenarios:', error);
-        alert('Failed to load scenarios. Please refresh the page.');
+        console.warn('Could not fetch scenarios.json, using embedded fallback.');
+        if (typeof SCENARIOS_FALLBACK !== 'undefined') {
+            gameState.scenarios = SCENARIOS_FALLBACK;
+        } else {
+            console.error('No fallback scenarios available:', error);
+            alert('Failed to load scenarios. Please refresh the page.');
+        }
     }
 }
 
@@ -46,7 +62,19 @@ function initializeEventListeners() {
         startBtn.disabled = e.target.value.trim().length === 0;
     });
 
+    teamNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !startBtn.disabled) {
+            startGame();
+        }
+    });
+
     startBtn.addEventListener('click', startGame);
+
+    // Path screen
+    document.getElementById('path-back-btn').addEventListener('click', () => {
+        showScreen('selection-screen');
+        renderScenariosGrid();
+    });
 
     // Ethics screen
     document.getElementById('add-issue-btn').addEventListener('click', addIssue);
@@ -58,8 +86,8 @@ function initializeEventListeners() {
     });
 
     document.getElementById('ethics-back-btn').addEventListener('click', () => {
-        showScreen('selection-screen');
-        renderScenariosGrid();
+        showScreen('path-screen');
+        renderPathScreen();
     });
     document.getElementById('ethics-next-btn').addEventListener('click', () => {
         showScreen('safeguards-screen');
@@ -67,7 +95,10 @@ function initializeEventListeners() {
     });
 
     // Safeguards screen
-    document.getElementById('safeguards-back-btn').addEventListener('click', () => showScreen('ethics-screen'));
+    document.getElementById('safeguards-back-btn').addEventListener('click', () => {
+        showScreen('ethics-screen');
+        renderEthicsScreen();
+    });
     document.getElementById('safeguards-next-btn').addEventListener('click', () => {
         showScreen('reflection-screen');
         renderReflectionScreen();
@@ -78,6 +109,11 @@ function initializeEventListeners() {
             e.preventDefault();
             addSafeguard();
         }
+    });
+
+    // Tag toggle pills
+    document.querySelectorAll('.tag-toggle').forEach(btn => {
+        btn.addEventListener('click', () => btn.classList.toggle('active'));
     });
 
     // Reflection screen
@@ -117,6 +153,55 @@ function initializeEventListeners() {
 }
 
 // ===================================
+// Timer
+// ===================================
+
+function startTimer(minutes) {
+    stopTimer();
+    timerEndTime = Date.now() + minutes * 60 * 1000;
+
+    document.querySelectorAll('.timer-bar').forEach(bar => bar.classList.remove('hidden'));
+
+    updateTimerDisplay();
+    timerInterval = setInterval(updateTimerDisplay, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    document.querySelectorAll('.timer-bar').forEach(bar => bar.classList.add('hidden'));
+}
+
+function updateTimerDisplay() {
+    const remaining = Math.max(0, timerEndTime - Date.now());
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    const display = `${mins}:${secs.toString().padStart(2, '0')} remaining`;
+
+    document.querySelectorAll('.timer-display').forEach(el => {
+        el.textContent = display;
+        if (mins < 2) {
+            el.classList.add('warning');
+        } else {
+            el.classList.remove('warning');
+        }
+    });
+
+    if (remaining === 0) {
+        document.querySelectorAll('.timer-display').forEach(el => {
+            el.textContent = "Time's up!";
+            el.classList.add('warning');
+        });
+        stopTimer();
+    }
+}
+
+window.startTimer = startTimer;
+window.stopTimer = stopTimer;
+
+// ===================================
 // Game Flow Functions
 // ===================================
 
@@ -126,7 +211,6 @@ function startGame() {
 
     if (!inputTeamName) return;
 
-    // If new team name entered, clear old progress
     if (gameState.teamName && gameState.teamName !== inputTeamName) {
         gameState.selectedScenario = null;
     }
@@ -136,18 +220,21 @@ function startGame() {
 
     // Resumption logic
     if (gameState.selectedScenario) {
-        const { safeguards, issues, reflection } = gameState.selectedScenario;
+        const { safeguards, issues, chosenPath, reflection } = gameState.selectedScenario;
         if (reflection && (reflection.hardest || reflection.disagreement)) {
             showSummary();
         } else if (safeguards && safeguards.length > 0) {
             showScreen('reflection-screen');
             renderReflectionScreen();
-        } else if (issues.length > 0) {
+        } else if (issues && issues.length > 0) {
             showScreen('safeguards-screen');
             renderSafeguardsScreen();
-        } else {
+        } else if (chosenPath) {
             showScreen('ethics-screen');
             renderEthicsScreen();
+        } else {
+            showScreen('path-screen');
+            renderPathScreen();
         }
     } else {
         showScreen('selection-screen');
@@ -166,6 +253,10 @@ function showScreen(screenId) {
     window.scrollTo(0, 0);
 }
 
+// ===================================
+// Scenario Selection
+// ===================================
+
 function renderScenariosGrid() {
     const grid = document.getElementById('scenarios-grid');
     grid.innerHTML = '';
@@ -176,6 +267,7 @@ function renderScenariosGrid() {
         btn.innerHTML = `
             <span class="card-index">Scenario ${index + 1}</span>
             <span class="card-title">${scenario.title}</span>
+            <span class="card-subtitle">${scenario.subtitle}</span>
         `;
         btn.addEventListener('click', () => selectScenario(scenario));
         grid.appendChild(btn);
@@ -185,23 +277,29 @@ function renderScenariosGrid() {
 function selectScenario(scenario) {
     gameState.selectedScenario = {
         scenarioObj: scenario,
+        chosenPath: null,
         issues: [],
         safeguards: [],
         reflection: {}
     };
 
     saveToLocalStorage();
-    showScreen('ethics-screen');
-    renderEthicsScreen();
+    showScreen('path-screen');
+    renderPathScreen();
 }
 
-function renderEthicsScreen() {
-    const { scenarioObj, issues } = gameState.selectedScenario;
+// ===================================
+// Path Selection
+// ===================================
 
-    document.getElementById('ethics-scenario-title').textContent = scenarioObj.title;
-    document.getElementById('ethics-story-text').textContent = scenarioObj.story;
+function renderPathScreen() {
+    const { scenarioObj } = gameState.selectedScenario;
 
-    const signalsList = document.getElementById('ethics-signals-list');
+    document.getElementById('path-scenario-title').textContent = scenarioObj.title;
+    document.getElementById('path-story-text').textContent = scenarioObj.story;
+
+    // Render signals
+    const signalsList = document.getElementById('path-signals-list');
     signalsList.innerHTML = '';
     scenarioObj.strongSignals.forEach(signal => {
         const li = document.createElement('li');
@@ -209,23 +307,80 @@ function renderEthicsScreen() {
         signalsList.appendChild(li);
     });
 
-    // Render choices
-    const choicesList = document.getElementById('ethics-choices-list');
-    choicesList.innerHTML = '';
-    scenarioObj.choices.forEach((choice, index) => {
-        const choiceCard = document.createElement('div');
-        choiceCard.className = 'choice-card';
-        choiceCard.innerHTML = `
-            <div class="choice-header">
-                <span class="choice-number">${index + 1}</span>
-                <strong>${choice.text}</strong>
-            </div>
-            <div class="choice-consequence">${choice.consequence}</div>
+    // Story toggle
+    const storyToggle = document.getElementById('story-toggle');
+    const storyBody = document.getElementById('story-body');
+    const toggleIcon = document.getElementById('toggle-icon');
+
+    // Expand by default on desktop, collapse on mobile
+    if (window.innerWidth > 768) {
+        storyBody.classList.remove('collapsed');
+        toggleIcon.textContent = '−';
+    } else {
+        storyBody.classList.add('collapsed');
+        toggleIcon.textContent = '+';
+    }
+
+    storyToggle.onclick = () => {
+        storyBody.classList.toggle('collapsed');
+        toggleIcon.textContent = storyBody.classList.contains('collapsed') ? '+' : '−';
+    };
+
+    // Render path cards
+    const grid = document.getElementById('paths-grid');
+    grid.innerHTML = '';
+
+    scenarioObj.paths.forEach((path, index) => {
+        const card = document.createElement('button');
+        card.className = 'path-card';
+
+        // Highlight if already chosen
+        if (gameState.selectedScenario.chosenPath &&
+            gameState.selectedScenario.chosenPath.text === path.text) {
+            card.classList.add('selected');
+        }
+
+        card.innerHTML = `
+            <span class="path-label">Path ${index + 1}</span>
+            <span class="path-title">${path.text}</span>
+            <span class="path-description">${path.description}</span>
         `;
-        choicesList.appendChild(choiceCard);
+        card.addEventListener('click', () => choosePath(path));
+        grid.appendChild(card);
     });
+}
+
+function choosePath(path) {
+    // If switching paths, clear issues and safeguards since they were written for the old path
+    const current = gameState.selectedScenario.chosenPath;
+    if (current && current.text !== path.text) {
+        gameState.selectedScenario.issues = [];
+        gameState.selectedScenario.safeguards = [];
+        gameState.selectedScenario.reflection = {};
+    }
+
+    gameState.selectedScenario.chosenPath = path;
+    saveToLocalStorage();
+    showScreen('ethics-screen');
+    renderEthicsScreen();
+}
+
+// ===================================
+// Ethics Screen
+// ===================================
+
+function renderEthicsScreen() {
+    const { scenarioObj, chosenPath } = gameState.selectedScenario;
+
+    document.getElementById('ethics-scenario-title').textContent = scenarioObj.title;
+
+    // Show chosen path
+    document.getElementById('chosen-path-text').textContent = `${chosenPath.text} — ${chosenPath.description}`;
+    document.getElementById('ethics-tension-text').textContent = chosenPath.tension;
 
     renderIssuesList();
+
+    setTimeout(() => document.getElementById('issue-input').focus(), 400);
 }
 
 function addIssue() {
@@ -237,6 +392,7 @@ function addIssue() {
         input.value = '';
         renderIssuesList();
         saveToLocalStorage();
+        input.focus();
     }
 }
 
@@ -257,23 +413,30 @@ function renderIssuesList() {
         const item = document.createElement('div');
         item.className = 'issue-item';
         item.innerHTML = `
-            <span class="issue-text">${issue}</span>
-            <button class="delete-btn" onclick="deleteIssue(${index})">×</button>
+            <span class="issue-text">${escapeHtml(issue)}</span>
+            <button class="delete-btn" onclick="deleteIssue(${index})" aria-label="Delete issue">&times;</button>
         `;
         list.appendChild(item);
     });
 
-    // Update count badge
     const count = issues.length;
-    countBadge.textContent = `${count} issue${count !== 1 ? 's' : ''} identified`;
+    countBadge.textContent = `${count} issue${count !== 1 ? 's' : ''}`;
     countBadge.style.display = count > 0 ? 'inline-block' : 'none';
 
     nextBtn.disabled = issues.length === 0;
 }
 
+// ===================================
+// Safeguards Screen
+// ===================================
+
 function renderSafeguardsScreen() {
-    const { scenarioObj, issues } = gameState.selectedScenario;
+    const { scenarioObj, chosenPath, issues } = gameState.selectedScenario;
     document.getElementById('safeguards-scenario-title').textContent = scenarioObj.title;
+
+    // Show chosen path
+    document.getElementById('safeguards-chosen-path').textContent =
+        `${chosenPath.text} — ${chosenPath.description}`;
 
     const selectedIssuesList = document.getElementById('selected-issues-list');
     selectedIssuesList.innerHTML = '';
@@ -284,6 +447,8 @@ function renderSafeguardsScreen() {
     });
 
     renderSafeguardsList();
+
+    setTimeout(() => document.getElementById('safeguard-input').focus(), 400);
 }
 
 function addSafeguard() {
@@ -292,26 +457,24 @@ function addSafeguard() {
 
     if (!safeguardText) return;
 
-    // Get selected tags
     const selectedTags = [];
-    document.querySelectorAll('.tag-checkboxes-inline input[type="checkbox"]:checked').forEach(checkbox => {
-        selectedTags.push(checkbox.value);
+    document.querySelectorAll('.tag-toggle.active').forEach(btn => {
+        selectedTags.push(btn.dataset.value);
     });
 
-    // Add safeguard with tags
     gameState.selectedScenario.safeguards.push({
         text: safeguardText,
         tags: selectedTags
     });
 
-    // Clear input and checkboxes
     input.value = '';
-    document.querySelectorAll('.tag-checkboxes-inline input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = false;
+    document.querySelectorAll('.tag-toggle').forEach(btn => {
+        btn.classList.remove('active');
     });
 
     renderSafeguardsList();
     saveToLocalStorage();
+    input.focus();
 }
 
 function deleteSafeguard(index) {
@@ -337,39 +500,46 @@ function renderSafeguardsList() {
 
         item.innerHTML = `
             <div class="safeguard-item-content">
-                <span class="safeguard-text">${safeguard.text}</span>
+                <span class="safeguard-text">${escapeHtml(safeguard.text)}</span>
                 ${tagsHtml}
             </div>
-            <button class="delete-btn" onclick="deleteSafeguard(${index})">×</button>
+            <button class="delete-btn" onclick="deleteSafeguard(${index})" aria-label="Delete safeguard">&times;</button>
         `;
         list.appendChild(item);
     });
 
-    // Update count badge
     const count = safeguards.length;
-    countBadge.textContent = `${count} safeguard${count !== 1 ? 's' : ''} added`;
+    countBadge.textContent = `${count} safeguard${count !== 1 ? 's' : ''}`;
     countBadge.style.display = count > 0 ? 'inline-block' : 'none';
 
     nextBtn.disabled = safeguards.length === 0;
 }
 
+// ===================================
+// Reflection Screen
+// ===================================
+
 function renderReflectionScreen() {
     const { scenarioObj, reflection } = gameState.selectedScenario;
     document.getElementById('reflection-scenario-title').textContent = scenarioObj.title;
 
-    // Restore reflection values
     document.getElementById('reflection-hardest').value = reflection?.hardest || '';
     document.getElementById('reflection-disagreement').value = reflection?.disagreement || '';
     document.getElementById('reflection-confidence').value = reflection?.confidence || 3;
     document.getElementById('confidence-value').textContent = reflection?.confidence || 3;
 }
 
+// ===================================
+// Summary Screen
+// ===================================
+
 function showSummary() {
     showScreen('summary-screen');
-    document.getElementById('team-name-display').textContent = `Team: ${gameState.teamName}`;
+    stopTimer();
+    document.getElementById('team-name-display').textContent = `Team: ${gameState.teamName}`; // textContent is safe
 
     const summaryContent = document.getElementById('summary-content');
-    const { scenarioObj, issues, safeguards, reflection } = gameState.selectedScenario;
+    const { scenarioObj, chosenPath, issues, safeguards, reflection } = gameState.selectedScenario;
 
     const safeguardsHtml = safeguards.map(sg => {
         const tagsHtml = sg.tags.length > 0
@@ -378,7 +548,7 @@ function showSummary() {
         return `
             <div class="summary-safeguard-item">
                 ${tagsHtml}
-                <p>${sg.text}</p>
+                <p>${escapeHtml(sg.text)}</p>
             </div>
         `;
     }).join('');
@@ -387,8 +557,8 @@ function showSummary() {
         ? `
         <div class="summary-section">
             <h4>Team Reflection</h4>
-            ${reflection.hardest ? `<p><strong>Hardest decision:</strong> ${reflection.hardest}</p>` : ''}
-            ${reflection.disagreement ? `<p><strong>Points of disagreement:</strong> ${reflection.disagreement}</p>` : ''}
+            ${reflection.hardest ? `<p><strong>Hardest decision:</strong> ${escapeHtml(reflection.hardest)}</p>` : ''}
+            ${reflection.disagreement ? `<p><strong>Points of disagreement:</strong> ${escapeHtml(reflection.disagreement)}</p>` : ''}
             ${reflection.confidence ? `<p><strong>Confidence level:</strong> ${reflection.confidence}/5</p>` : ''}
         </div>
         `
@@ -396,12 +566,17 @@ function showSummary() {
 
     summaryContent.innerHTML = `
         <div class="summary-scenario">
-            <h3>Selected Scenario: ${scenarioObj.title}</h3>
+            <h3>${scenarioObj.title}</h3>
+
+            <div class="summary-section">
+                <h4>Chosen Path</h4>
+                <p><strong>${chosenPath.text}</strong> &mdash; ${chosenPath.description}</p>
+            </div>
 
             <div class="summary-section">
                 <h4>Ethical Issues Identified</h4>
                 <ul>
-                    ${issues.map(issue => `<li>${issue}</li>`).join('')}
+                    ${issues.map(issue => `<li>${escapeHtml(issue)}</li>`).join('')}
                 </ul>
             </div>
 
@@ -414,26 +589,25 @@ function showSummary() {
         </div>
     `;
 
-    // Save to Airtable
     saveToAirtable();
 }
 
 function exportResults() {
-    const { scenarioObj, issues, safeguards, reflection } = gameState.selectedScenario;
+    const { scenarioObj, chosenPath, issues, safeguards, reflection } = gameState.selectedScenario;
     const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const safeguardsHtml = safeguards.map(sg => {
         const tags = sg.tags.length > 0
             ? `<div style="margin-bottom:4px">${sg.tags.map(t => `<span style="display:inline-block;background:#e0e7ff;color:#3730a3;padding:2px 8px;border-radius:12px;font-size:12px;margin-right:4px">${t}</span>`).join('')}</div>`
             : '';
-        return `<li style="margin-bottom:10px">${tags}${sg.text}</li>`;
+        return `<li style="margin-bottom:10px">${tags}${escapeHtml(sg.text)}</li>`;
     }).join('');
 
     const reflectionHtml = reflection && (reflection.hardest || reflection.disagreement)
         ? `
         <h2 style="color:#4f46e5;border-bottom:2px solid #e0e7ff;padding-bottom:6px">Team Reflection</h2>
-        ${reflection.hardest ? `<p><strong>Hardest decision:</strong> ${reflection.hardest}</p>` : ''}
-        ${reflection.disagreement ? `<p><strong>Points of disagreement:</strong> ${reflection.disagreement}</p>` : ''}
+        ${reflection.hardest ? `<p><strong>Hardest decision:</strong> ${escapeHtml(reflection.hardest)}</p>` : ''}
+        ${reflection.disagreement ? `<p><strong>Points of disagreement:</strong> ${escapeHtml(reflection.disagreement)}</p>` : ''}
         ${reflection.confidence ? `<p><strong>Confidence level:</strong> ${reflection.confidence} / 5</p>` : ''}
         `
         : '';
@@ -450,6 +624,7 @@ function exportResults() {
   h2 { color: #4f46e5; border-bottom: 2px solid #e0e7ff; padding-bottom: 6px; }
   ul { padding-left: 20px; }
   li { margin-bottom: 8px; }
+  .path-box { background: #f0f0ff; border-left: 4px solid #4f46e5; padding: 12px 16px; margin: 12px 0; border-radius: 4px; }
   .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 12px; }
   @media print { body { margin: 20px; } }
 </style>
@@ -461,8 +636,11 @@ function exportResults() {
   <h2>Scenario: ${scenarioObj.title}</h2>
   <p>${scenarioObj.story}</p>
 
+  <h2>Chosen Path</h2>
+  <div class="path-box"><strong>${chosenPath.text}</strong> &mdash; ${chosenPath.description}</div>
+
   <h2>Ethical Issues Identified</h2>
-  <ul>${issues.map(i => `<li>${i}</li>`).join('')}</ul>
+  <ul>${issues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
 
   <h2>Proposed Safeguards &amp; Guidelines</h2>
   <ul>${safeguardsHtml}</ul>
@@ -492,9 +670,10 @@ function restartGame() {
             scenarios: gameState.scenarios
         };
 
+        stopTimer();
         localStorage.removeItem('futureEthicsGameState');
         document.getElementById('team-name').value = '';
-        document.getElementById('start-btn').innerHTML = 'Begin Journey <span class="btn-arrow">→</span>';
+        document.getElementById('start-btn').innerHTML = 'Begin Journey <span class="btn-arrow">&rarr;</span>';
         showScreen('welcome-screen');
     }
 }
@@ -504,7 +683,6 @@ function restartGame() {
 // ===================================
 
 async function saveToAirtable() {
-    // Check if Airtable is configured
     if (!AIRTABLE_CONFIG.apiKey || AIRTABLE_CONFIG.apiKey === 'YOUR_AIRTABLE_API_KEY_HERE') {
         console.warn('Airtable not configured. Skipping save.');
         return;
@@ -512,9 +690,8 @@ async function saveToAirtable() {
 
     showLoading(true);
 
-    const { scenarioObj, issues, safeguards, reflection } = gameState.selectedScenario;
+    const { scenarioObj, chosenPath, issues, safeguards, reflection } = gameState.selectedScenario;
 
-    // Format safeguards with tags
     const safeguardsFormatted = safeguards.map(sg => {
         const tagStr = sg.tags.length > 0 ? ` [${sg.tags.join(', ')}]` : '';
         return `${sg.text}${tagStr}`;
@@ -524,6 +701,7 @@ async function saveToAirtable() {
         fields: {
             'Team Name': gameState.teamName.trim(),
             'Scenario': scenarioObj.title,
+            'Chosen Path': chosenPath ? `${chosenPath.text}: ${chosenPath.description}` : '',
             'Ethical Issues': issues.map(i => i.trim()).join('\n'),
             'Safeguards': safeguardsFormatted,
             'Reflection Hardest': reflection?.hardest || '',
@@ -532,7 +710,6 @@ async function saveToAirtable() {
             'Timestamp': new Date().toISOString()
         }
     };
-
 
     try {
         const response = await fetch(AIRTABLE_CONFIG.apiUrl, {
@@ -563,7 +740,7 @@ async function saveToAirtable() {
 function showAirtableSuccess() {
     const status = document.createElement('div');
     status.className = 'airtable-status-toast success';
-    status.innerHTML = '✓ Saved to Airtable';
+    status.innerHTML = '&#10003; Saved to Airtable';
     document.body.appendChild(status);
     setTimeout(() => status.remove(), 3000);
 }
@@ -578,7 +755,6 @@ function showLoading(show) {
 }
 
 function showAirtableError(message) {
-    // Create temporary error notification
     const notification = document.createElement('div');
     notification.style.cssText = `
         position: fixed;
@@ -599,14 +775,11 @@ function showAirtableError(message) {
     `;
 
     document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.remove();
-    }, 5000);
+    setTimeout(() => notification.remove(), 5000);
 }
 
 // ===================================
-// Local Storage (Backup)
+// Local Storage
 // ===================================
 
 function saveToLocalStorage() {
@@ -619,19 +792,16 @@ function saveToLocalStorage() {
 }
 
 function showSaveIndicator() {
-    // Remove any existing indicator
     const existing = document.querySelector('.save-indicator');
     if (existing) existing.remove();
 
     const indicator = document.createElement('div');
     indicator.className = 'save-indicator';
-    indicator.innerHTML = '✓ Saved';
+    indicator.innerHTML = '&#10003; Saved';
     document.body.appendChild(indicator);
 
-    // Trigger animation
     setTimeout(() => indicator.classList.add('show'), 10);
 
-    // Remove after 2 seconds
     setTimeout(() => {
         indicator.classList.remove('show');
         setTimeout(() => indicator.remove(), 300);
@@ -643,23 +813,19 @@ function loadFromLocalStorage() {
         const saved = localStorage.getItem('futureEthicsGameState');
         if (saved) {
             const parsed = JSON.parse(saved);
-            // Only restore if scenarios are loaded
             if (gameState.scenarios.length > 0) {
                 gameState = {
                     ...parsed,
                     scenarios: gameState.scenarios
                 };
 
-                // Pre-fill welcome screen if team name exists
                 if (gameState.teamName) {
                     const teamNameInput = document.getElementById('team-name');
                     const startBtn = document.getElementById('start-btn');
                     if (teamNameInput && startBtn) {
                         teamNameInput.value = gameState.teamName;
                         startBtn.disabled = false;
-
-                        // Change button text to indicate resumption
-                        startBtn.innerHTML = `Resume Journey <span class="btn-arrow">→</span>`;
+                        startBtn.innerHTML = 'Resume Journey <span class="btn-arrow">&rarr;</span>';
                     }
                 }
             }
