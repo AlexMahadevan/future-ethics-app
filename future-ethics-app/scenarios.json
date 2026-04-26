@@ -49,9 +49,9 @@
                     "tension": "Reaches audiences where they are and creates deeper engagement through immersion. But risks creating filter bubbles and losing shared public square. Privacy concerns intensify."
                 },
                 {
-                    "text": "Resist fragmentation",
-                    "description": "Maintain centralized, destination-based journalism. The newsroom is a place you come to, not a thing that follows you.",
-                    "tension": "Preserves common information spaces and easier editorial control, but loses relevance with younger audiences. May become obsolete as consumption patterns shift away from active seeking."
+                    "text": "Own the trust layer",
+                    "description": "Don't build ambient experiences — become the verification infrastructure underneath them. When AI assistants deliver news, your system certifies it's real.",
+                    "tension": "Gives you enormous invisible power over what's considered trustworthy. But you're a gatekeeper without direct accountability to audiences. What happens when your certification is wrong? And who audits the auditor?"
                 },
                 {
                     "text": "Multi-platform strategy",
