@@ -9,6 +9,7 @@ var SCENARIOS_FALLBACK = [
       "Vibe coding simplifies app creation for everyone",
       "Modular news feeds sold as high-trust data units",
       "The end of 'owned' platforms and aggregated hubs",
+      "Decentralized protocols (AT Protocol/Bluesky) give users control over feeds and algorithms",
       "Trust verification as the primary product of newsrooms",
       "Hyper-personalization through DIY customer interfaces"
     ],
