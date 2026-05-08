@@ -1,7 +1,10 @@
 # Add this to your .gitignore to avoid committing sensitive credentials
 
 # Airtable credentials
-config.js
+# NOTE: config.js is intentionally committed for GitHub Pages deploy.
+# The PAT inside is narrowly scoped (write to one base only) and the
+# key is runtime-exposed in browser network requests anyway. Rotate
+# the PAT after each workshop run.
 config.production.js
 
 # System files
