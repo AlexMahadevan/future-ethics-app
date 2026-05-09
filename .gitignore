@@ -4,9 +4,11 @@
 config.js
 config.production.js
 
-# Allow future-ethics-app/config.js so GitHub Pages can read Airtable creds.
-# The PAT is narrowly scoped (write to one base only) and is runtime-exposed
-# in browser network requests anyway. Rotate it after each workshop.
+# Allow config.js (root and future-ethics-app subfolder) so GitHub Pages
+# can read Airtable creds. The PAT is narrowly scoped (write to one base
+# only) and is runtime-exposed in browser network requests anyway.
+# Rotate it after each workshop.
+!/config.js
 !future-ethics-app/config.js
 
 # System files

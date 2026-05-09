@@ -55,9 +55,9 @@ var SCENARIOS_FALLBACK = [
         "tension": "Gives you enormous invisible power over what's considered trustworthy. But you're a gatekeeper without direct accountability to audiences. What happens when your certification is wrong? And who audits the auditor?"
       },
       {
-        "text": "Multi-platform strategy",
-        "description": "Adapt content for both traditional and ambient consumption. Same journalism, every surface.",
-        "tension": "Maintains broad reach across generations and platforms. Resource-intensive and risks diluting quality. Requires new skills in spatial storytelling and conversational design."
+        "text": "Defend the destination",
+        "description": "Refuse to feed the ambient layer. Stay screen-first, product-first, brand-first. Force audiences to come to you for journalism that can't be flattened into a voice answer.",
+        "tension": "Preserves voice, brand, and editorial control. But cedes the fastest-growing surface to competitors who do build for ambient. Risks shrinking to an audience that still values destinations."
       }
     ]
   },
@@ -117,9 +117,9 @@ var SCENARIOS_FALLBACK = [
         "tension": "Preserves traditional accountability and sourcing standards. But misses the patterns only machines can see, and falls behind competitors who let AI lead. May be a principled stand that costs you the story."
       },
       {
-        "text": "New standards for a new era",
-        "description": "Develop entirely new frameworks for AI-driven journalism: transparency protocols, explainability requirements, and disclosure standards.",
-        "tension": "Positions your organization as a leader in evolving journalism ethics. But requires time, expertise, and industry buy-in that may never come. Meanwhile, competitors ship stories while you write frameworks."
+        "text": "Pool the investigative AI",
+        "description": "Share AI investigative infrastructure across a consortium of newsrooms. ICIJ-style: pooled tools, shared methodology, joint accountability.",
+        "tension": "Spreads the cost of AI capability and creates collective oversight. But trades exclusive scoops for shared bylines, exposes methodology to competitors, and depends on consortium governance you don't fully control."
       }
     ]
   },
