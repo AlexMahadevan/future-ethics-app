@@ -29,7 +29,9 @@
                     "description": "Focus on untouchable, high-context human storytelling that can't be remixed or disaggregated.",
                     "tension": "Preserves the craft and voice of journalism, but potentially limits reach to a small, elite audience willing to leave their custom 'vibes' for a shared perspective."
                 }
-            ]
+            ],
+            "issuePlaceholder": "e.g., We lose control over how our reporting is framed when third-party apps remix our feeds...",
+            "safeguardPlaceholder": "e.g., Require provenance metadata on every licensed feed that downstream apps must surface to users..."
         },
         {
             "id": 2,
@@ -59,7 +61,9 @@
                     "description": "Refuse to feed the ambient layer. Stay screen-first, product-first, brand-first. Force audiences to come to you for journalism that can't be flattened into a voice answer.",
                     "tension": "Preserves voice, brand, and editorial control. But cedes the fastest-growing surface to competitors who do build for ambient. Risks shrinking to an audience that still values destinations."
                 }
-            ]
+            ],
+            "issuePlaceholder": "e.g., AI assistants quote our reporting without attribution or context, and audiences can't tell us from a hallucination...",
+            "safeguardPlaceholder": "e.g., Refuse licensing to AI assistants that won't surface source attribution and a link back to the original story..."
         },
         {
             "id": 3,
@@ -90,7 +94,9 @@
                     "description": "AI handles production, humans own editorial judgment, and a firewall protects both from engagement optimization.",
                     "tension": "Creates clear accountability and prevents automation creep. Requires constant vigilance and institutional courage. The firewall will be tested every quarter when revenue dips."
                 }
-            ]
+            ],
+            "issuePlaceholder": "e.g., Engagement optimization quietly overrides editorial judgment, and no one in the newsroom is accountable for the trade-off...",
+            "safeguardPlaceholder": "e.g., The editor in chief can override any automated story selection. The override is logged with a reason and reviewed monthly..."
         }
     ]
 }

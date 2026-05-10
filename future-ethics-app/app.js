@@ -378,9 +378,14 @@ function renderEthicsScreen() {
     document.getElementById('chosen-path-text').textContent = `${chosenPath.text} — ${chosenPath.description}`;
     document.getElementById('ethics-tension-text').textContent = chosenPath.tension;
 
+    const issueInput = document.getElementById('issue-input');
+    if (scenarioObj.issuePlaceholder) {
+        issueInput.placeholder = scenarioObj.issuePlaceholder;
+    }
+
     renderIssuesList();
 
-    setTimeout(() => document.getElementById('issue-input').focus(), 400);
+    setTimeout(() => issueInput.focus(), 400);
 }
 
 function addIssue() {
@@ -446,9 +451,14 @@ function renderSafeguardsScreen() {
         selectedIssuesList.appendChild(li);
     });
 
+    const safeguardInput = document.getElementById('safeguard-input');
+    if (scenarioObj.safeguardPlaceholder) {
+        safeguardInput.placeholder = scenarioObj.safeguardPlaceholder;
+    }
+
     renderSafeguardsList();
 
-    setTimeout(() => document.getElementById('safeguard-input').focus(), 400);
+    setTimeout(() => safeguardInput.focus(), 400);
 }
 
 function addSafeguard() {
