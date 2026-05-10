@@ -51,7 +51,7 @@
                 },
                 {
                     "text": "Own the trust layer",
-                    "description": "Don't build ambient experiences — become the verification infrastructure underneath them. When AI assistants deliver news, your system certifies it's real.",
+                    "description": "Don't build ambient experiences \u2014 become the verification infrastructure underneath them. When AI assistants deliver news, your system certifies it's real.",
                     "tension": "Gives you enormous invisible power over what's considered trustworthy. But you're a gatekeeper without direct accountability to audiences. What happens when your certification is wrong? And who audits the auditor?"
                 },
                 {
@@ -89,68 +89,6 @@
                     "text": "Separation of powers",
                     "description": "AI handles production, humans own editorial judgment, and a firewall protects both from engagement optimization.",
                     "tension": "Creates clear accountability and prevents automation creep. Requires constant vigilance and institutional courage. The firewall will be tested every quarter when revenue dips."
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "title": "The AI Investigative Engine",
-            "subtitle": "When machines find the stories humans can't",
-            "story": "By 2030, the best investigative journalism doesn't start with a tip from a human source\u2014it starts with an AI agent that never sleeps. These systems continuously scrape public records, cross-reference corporate filings, track money flows across jurisdictions, and surface patterns that would take human reporters years to find. The biggest corruption exposés of the decade were all machine-discovered: shell company networks, insider trading rings, environmental violations hidden across thousands of permit applications. Newsrooms that can't afford AI investigative infrastructure simply miss the stories. The ones that have it face a different problem: their most powerful reporting tool is a black box. The AI can show you the pattern, but it can't explain its reasoning in court, can't be cross-examined, and sometimes finds connections that are statistically significant but journalistically meaningless. The line between 'source' and 'method' has dissolved. Traditional sourcing standards\u2014built for a world of human tipsters and document leaks\u2014feel like rules for a game nobody plays anymore.",
-            "strongSignals": [
-                "AI-powered investigative tools becoming standard at major outlets",
-                "Automated pattern recognition in public records at scale",
-                "Growing gap between AI-equipped and AI-lacking newsrooms",
-                "Questions about algorithmic transparency and explainability",
-                "Evolution of sourcing and attribution standards",
-                "Courts and regulators struggling with AI-generated evidence"
-            ],
-            "paths": [
-                {
-                    "text": "AI-first investigations",
-                    "description": "Build your investigative pipeline around AI discovery. Humans verify and contextualize what machines find.",
-                    "tension": "Catches stories no human could find. But creates dependency on opaque systems and raises questions about what happens when the AI is wrong. Sets precedent that machines drive the journalism."
-                },
-                {
-                    "text": "Human-led, AI-assisted",
-                    "description": "Reporters lead investigations. AI is one tool among many\u2014useful but never the driver.",
-                    "tension": "Preserves traditional accountability and sourcing standards. But misses the patterns only machines can see, and falls behind competitors who let AI lead. May be a principled stand that costs you the story."
-                },
-                {
-                    "text": "Pool the investigative AI",
-                    "description": "Share AI investigative infrastructure across a consortium of newsrooms. ICIJ-style: pooled tools, shared methodology, joint accountability.",
-                    "tension": "Spreads the cost of AI capability and creates collective oversight. But trades exclusive scoops for shared bylines, exposes methodology to competitors, and depends on consortium governance you don't fully control."
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "title": "The Post-Truth Newsroom",
-            "subtitle": "When all evidence is suspect by default",
-            "story": "By the mid-2030s, nothing looks fake\u2014and that's the problem. Deepfakes testify in court. AI-generated documents are indistinguishable from originals. Every photo, video, and audio recording arrives with an asterisk: *this might not be real.* The concept of 'seeing is believing' is dead. Newsrooms have been forced to rebuild verification from the ground up. Every piece of media now requires provenance tracking, chain-of-custody documentation, and multi-source corroboration before it can be used. Some newsrooms have built entire verification departments that rival their reporting staff. Others have partnered with tech companies to use AI detection tools\u2014but those tools are locked in an arms race with the generators, and they're losing. The public has adapted too, but not in the way journalists hoped. Instead of demanding better verification, many people have simply decided that nothing is trustworthy\u2014and retreated into information tribes where 'truth' is whatever the group believes. Journalism's oldest promise\u2014we show you what's real\u2014has never been harder to keep.",
-            "strongSignals": [
-                "Sophisticated deepfake technology indistinguishable from reality",
-                "Arms race between AI generation and AI detection",
-                "Erosion of trust in all visual and audio evidence",
-                "Political weaponization of 'it's a deepfake' as universal denial",
-                "Verification becoming as resource-intensive as reporting itself",
-                "Public retreat into information tribes over shared reality"
-            ],
-            "paths": [
-                {
-                    "text": "Verification as the product",
-                    "description": "Make provenance and verification your core offering. Every piece of content comes with a transparent chain of evidence.",
-                    "tension": "Builds trust through radical transparency. But verification at scale is expensive, slows publishing, and may require revealing sources and methods. Audiences may not value what they can't see."
-                },
-                {
-                    "text": "Trust networks",
-                    "description": "Build webs of mutual verification between journalists, institutions, and authenticated sources. Trust is earned and networked, not proven per-piece.",
-                    "tension": "Leverages social proof and institutional reputation. But creates insider/outsider dynamics, is vulnerable to coordinated manipulation, and may exclude legitimate new voices who haven't earned trust yet."
-                },
-                {
-                    "text": "Embrace uncertainty",
-                    "description": "Stop pretending certainty is achievable. Teach audiences to navigate ambiguity and probability rather than seeking definitive truth.",
-                    "tension": "More honest about the information landscape and builds critical thinking. But risks paralyzing audiences with doubt, enabling 'both sides' false equivalence, and giving bad actors cover to dismiss real evidence."
                 }
             ]
         }
