@@ -375,7 +375,7 @@ function renderEthicsScreen() {
     document.getElementById('ethics-scenario-title').textContent = scenarioObj.title;
 
     // Show chosen path
-    document.getElementById('chosen-path-text').textContent = `${chosenPath.text} — ${chosenPath.description}`;
+    document.getElementById('chosen-path-text').textContent = `${chosenPath.text}: ${chosenPath.description}`;
     document.getElementById('ethics-tension-text').textContent = chosenPath.tension;
 
     const issueInput = document.getElementById('issue-input');
@@ -441,7 +441,7 @@ function renderSafeguardsScreen() {
 
     // Show chosen path
     document.getElementById('safeguards-chosen-path').textContent =
-        `${chosenPath.text} — ${chosenPath.description}`;
+        `${chosenPath.text}: ${chosenPath.description}`;
 
     const selectedIssuesList = document.getElementById('selected-issues-list');
     selectedIssuesList.innerHTML = '';
@@ -566,7 +566,7 @@ function showSummary() {
     const reflectionHtml = reflection && (reflection.hardest || reflection.disagreement)
         ? `
         <div class="summary-section">
-            <h4>Team Reflection</h4>
+            <h4>Team reflection</h4>
             ${reflection.hardest ? `<p><strong>Hardest decision:</strong> ${escapeHtml(reflection.hardest)}</p>` : ''}
             ${reflection.disagreement ? `<p><strong>Points of disagreement:</strong> ${escapeHtml(reflection.disagreement)}</p>` : ''}
             ${reflection.confidence ? `<p><strong>Confidence level:</strong> ${reflection.confidence}/5</p>` : ''}
@@ -579,19 +579,19 @@ function showSummary() {
             <h3>${scenarioObj.title}</h3>
 
             <div class="summary-section">
-                <h4>Chosen Path</h4>
-                <p><strong>${chosenPath.text}</strong> &mdash; ${chosenPath.description}</p>
+                <h4>Chosen path</h4>
+                <p><strong>${chosenPath.text}</strong>: ${chosenPath.description}</p>
             </div>
 
             <div class="summary-section">
-                <h4>Ethical Issues Identified</h4>
+                <h4>Ethical issues</h4>
                 <ul>
                     ${issues.map(issue => `<li>${escapeHtml(issue)}</li>`).join('')}
                 </ul>
             </div>
 
             <div class="summary-section">
-                <h4>Proposed Safeguards & Guidelines</h4>
+                <h4>Proposed safeguards & guidelines</h4>
                 ${safeguardsHtml}
             </div>
 
@@ -615,7 +615,7 @@ function exportResults() {
 
     const reflectionHtml = reflection && (reflection.hardest || reflection.disagreement)
         ? `
-        <h2 style="color:#4f46e5;border-bottom:2px solid #e0e7ff;padding-bottom:6px">Team Reflection</h2>
+        <h2 style="color:#4f46e5;border-bottom:2px solid #e0e7ff;padding-bottom:6px">Team reflection</h2>
         ${reflection.hardest ? `<p><strong>Hardest decision:</strong> ${escapeHtml(reflection.hardest)}</p>` : ''}
         ${reflection.disagreement ? `<p><strong>Points of disagreement:</strong> ${escapeHtml(reflection.disagreement)}</p>` : ''}
         ${reflection.confidence ? `<p><strong>Confidence level:</strong> ${reflection.confidence} / 5</p>` : ''}
@@ -626,7 +626,7 @@ function exportResults() {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Future Ethics Report - ${gameState.teamName}</title>
+<title>Future ethics report - ${gameState.teamName}</title>
 <style>
   body { font-family: 'Segoe UI', system-ui, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 24px; color: #1e293b; line-height: 1.6; }
   h1 { color: #1e1b4b; margin-bottom: 4px; }
@@ -640,19 +640,19 @@ function exportResults() {
 </style>
 </head>
 <body>
-  <h1>Future Ethics Roadmap</h1>
-  <div class="meta">${gameState.teamName} &bull; ${date} &bull; Poynter Institute Workshop</div>
+  <h1>Future ethics roadmap</h1>
+  <div class="meta">${gameState.teamName} &bull; ${date} &bull; Poynter Institute workshop</div>
 
   <h2>Scenario: ${scenarioObj.title}</h2>
   <p>${scenarioObj.story}</p>
 
-  <h2>Chosen Path</h2>
-  <div class="path-box"><strong>${chosenPath.text}</strong> &mdash; ${chosenPath.description}</div>
+  <h2>Chosen path</h2>
+  <div class="path-box"><strong>${chosenPath.text}:</strong> ${chosenPath.description}</div>
 
-  <h2>Ethical Issues Identified</h2>
+  <h2>Ethical issues</h2>
   <ul>${issues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
 
-  <h2>Proposed Safeguards &amp; Guidelines</h2>
+  <h2>Proposed safeguards &amp; guidelines</h2>
   <ul>${safeguardsHtml}</ul>
 
   ${reflectionHtml}
@@ -683,7 +683,7 @@ function restartGame() {
         stopTimer();
         localStorage.removeItem('futureEthicsGameState');
         document.getElementById('team-name').value = '';
-        document.getElementById('start-btn').innerHTML = 'Begin Journey <span class="btn-arrow">&rarr;</span>';
+        document.getElementById('start-btn').innerHTML = 'Start <span class="btn-arrow">&rarr;</span>';
         showScreen('welcome-screen');
     }
 }
@@ -835,7 +835,7 @@ function loadFromLocalStorage() {
                     if (teamNameInput && startBtn) {
                         teamNameInput.value = gameState.teamName;
                         startBtn.disabled = false;
-                        startBtn.innerHTML = 'Resume Journey <span class="btn-arrow">&rarr;</span>';
+                        startBtn.innerHTML = 'Resume <span class="btn-arrow">&rarr;</span>';
                     }
                 }
             }

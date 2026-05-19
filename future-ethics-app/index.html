@@ -24,20 +24,19 @@
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
             <div class="welcome-content">
-                <h1 class="main-title">Let's build newsroom ethics policies of the future</h1>
+                <h1 class="main-title">Build the newsroom ethics policies of the future</h1>
                 <p class="subtitle">An AI future mapping exercise</p>
                 <p class="description">
-                    Explore 3 future scenarios and identify the ethical decisions and guardrails newsrooms will need to
-                    make.
+                    Pick from 3 future scenarios. Map the ethical decisions and guardrails your newsroom will need.
                 </p>
 
                 <div class="team-input-container">
-                    <label for="team-name">Enter Your Team Name</label>
+                    <label for="team-name">Enter your team name</label>
                     <input type="text" id="team-name" placeholder="e.g., Team Phoenix" autocomplete="off">
                 </div>
 
                 <button id="start-btn" class="primary-btn" disabled>
-                    Begin Journey
+                    Start
                     <span class="btn-arrow">&rarr;</span>
                 </button>
 
@@ -56,8 +55,8 @@
         <!-- Selection Screen -->
         <div id="selection-screen" class="screen">
             <div class="selection-container">
-                <h1 class="screen-title">Choose Your Scenario</h1>
-                <p class="screen-subtitle">Select a future journalism scenario to explore</p>
+                <h1 class="screen-title">Choose a scenario</h1>
+                <p class="screen-subtitle">Pick one to work through with your team</p>
                 <div id="scenarios-grid" class="scenarios-grid">
                     <!-- Scenario cards will be rendered here -->
                 </div>
@@ -70,7 +69,7 @@
                 <div class="progress-stepper">
                     <div class="step active">
                         <span class="step-number">1</span>
-                        <span class="step-label">Choose Path</span>
+                        <span class="step-label">Choose path</span>
                     </div>
                     <div class="step-connector"></div>
                     <div class="step">
@@ -100,12 +99,12 @@
 
                 <div class="path-story">
                     <button class="story-toggle" id="story-toggle">
-                        <h4>The Story <span class="toggle-icon" id="toggle-icon">+</span></h4>
+                        <h4>The story <span class="toggle-icon" id="toggle-icon">+</span></h4>
                     </button>
                     <div class="story-body collapsed" id="story-body">
                         <p id="path-story-text"></p>
                         <div class="path-signals">
-                            <h4>Strong Signals</h4>
+                            <h4>Strong signals</h4>
                             <ul id="path-signals-list"></ul>
                         </div>
                     </div>
@@ -158,7 +157,7 @@
                 </div>
 
                 <div class="phase-header">
-                    <span class="phase-badge">Phase 2: Ethical Issues</span>
+                    <span class="phase-badge">Phase 2: Ethical issues</span>
                     <h2 id="ethics-scenario-title" class="scenario-title"></h2>
                 </div>
 
@@ -170,20 +169,20 @@
                 <div class="phase-layout">
                     <div class="scenario-info-panel">
                         <div class="info-group">
-                            <h4>The Tension</h4>
+                            <h4>The tension</h4>
                             <p id="ethics-tension-text"></p>
                         </div>
                     </div>
 
                     <div class="input-panel">
                         <h3>What ethical issues does this path create?</h3>
-                        <p class="input-hint">Given the path your team chose, what ethical challenges arise? <span
+                        <p class="input-hint">Given the path your team chose, what ethical problems show up? <span
                                 id="issues-count" class="count-badge">0 issues</span></p>
 
                         <div class="issue-input-container">
                             <textarea id="issue-input" placeholder="e.g., Loss of human editorial oversight..."
                                 rows="2"></textarea>
-                            <button id="add-issue-btn" class="add-btn">+ Add Issue</button>
+                            <button id="add-issue-btn" class="add-btn">+ Add issue</button>
                         </div>
 
                         <div id="issues-list" class="issues-list">
@@ -234,25 +233,25 @@
                 </div>
 
                 <div class="phase-header">
-                    <span class="phase-badge">Phase 3: Safeguards & Guidelines</span>
+                    <span class="phase-badge">Phase 3: Safeguards & guidelines</span>
                     <h2 id="safeguards-scenario-title" class="scenario-title"></h2>
                 </div>
 
                 <div class="phase-layout">
                     <div class="scenario-info-panel">
                         <div class="info-group">
-                            <h4>Your Chosen Path</h4>
+                            <h4>Your chosen path</h4>
                             <p id="safeguards-chosen-path"></p>
                         </div>
                         <div class="info-group">
-                            <h4>Your Ethical Issues</h4>
+                            <h4>Your ethical issues</h4>
                             <ul id="selected-issues-list"></ul>
                         </div>
                     </div>
 
                     <div class="input-panel">
-                        <h3>Safeguards & New Ethics Guidelines</h3>
-                        <p class="input-hint">What policies would your newsroom implement to address these issues?
+                        <h3>Safeguards & new ethics guidelines</h3>
+                        <p class="input-hint">What policies would your newsroom write to address these issues?
                             <span id="safeguards-count" class="count-badge">0 safeguards</span>
                         </p>
 
@@ -274,7 +273,7 @@
                                 </div>
                             </div>
 
-                            <button id="add-safeguard-btn" class="add-btn">+ Add Safeguard</button>
+                            <button id="add-safeguard-btn" class="add-btn">+ Add safeguard</button>
                         </div>
 
                         <div id="safeguards-list" class="safeguards-list">
@@ -325,23 +324,22 @@
                 </div>
 
                 <div class="phase-header">
-                    <span class="phase-badge">Phase 4: Reflection</span>
+                    <span class="phase-badge">Phase 4: Reflect</span>
                     <h2 id="reflection-scenario-title" class="scenario-title"></h2>
                 </div>
 
                 <div class="reflection-content">
-                    <p class="reflection-intro">Before we finish, take a moment to reflect on your decision-making
-                        process.</p>
+                    <p class="reflection-intro">Before you finish, reflect on how the conversation went.</p>
 
                     <div class="reflection-question">
                         <label for="reflection-hardest">What was the hardest part of this scenario to decide?</label>
-                        <textarea id="reflection-hardest" rows="3" placeholder="What made this challenging?"></textarea>
+                        <textarea id="reflection-hardest" rows="3" placeholder="What made it hard?"></textarea>
                     </div>
 
                     <div class="reflection-question">
                         <label for="reflection-disagreement">Where did your team disagree most?</label>
                         <textarea id="reflection-disagreement" rows="3"
-                            placeholder="What points of tension emerged?"></textarea>
+                            placeholder="Where was the friction?"></textarea>
                     </div>
 
                     <div class="reflection-question">
@@ -362,7 +360,7 @@
                         <span class="btn-arrow">&larr;</span> Back to Safeguards
                     </button>
                     <button id="reflection-finish-btn" class="nav-btn primary-btn">
-                        View Final Summary <span class="btn-arrow">&rarr;</span>
+                        View final summary <span class="btn-arrow">&rarr;</span>
                     </button>
                 </div>
             </div>
@@ -380,10 +378,10 @@
 
                 <div class="summary-actions">
                     <button id="export-btn" class="secondary-btn">
-                        Export Results
+                        Export results
                     </button>
                     <button id="restart-btn" class="primary-btn">
-                        Start New Session
+                        Start a new session
                     </button>
                 </div>
             </div>
