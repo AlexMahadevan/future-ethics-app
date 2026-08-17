@@ -336,7 +336,7 @@ function renderJoin() {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'table-btn' + (state.table === n ? ' selected' : '') + (taken ? ' taken' : '');
-    b.innerHTML = n + '<small>' + esc(taken ? 'in use' : p.name.replace('Harbor Lane Pictures', 'Harbor Lane')) + '</small>';
+    b.innerHTML = n + '<small>' + esc(taken ? 'in use' : p.short) + '</small>';
     b.addEventListener('click', function () {
       state.table = n;
       persist();
@@ -372,7 +372,9 @@ function personaCardHtml(p) {
 }
 
 function renderPersona() {
-  $('#persona-card').innerHTML = personaCardHtml(personaForTable(state.table));
+  const p = personaForTable(state.table);
+  $('#persona-kicker').textContent = p.kicker + ' for the next ' + SESSION.sprintMinutes + ' minutes';
+  $('#persona-card').innerHTML = personaCardHtml(p);
 }
 
 // ============================================================

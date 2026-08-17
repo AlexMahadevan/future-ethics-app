@@ -32,9 +32,19 @@ Fixed, not random. Table 1 draws cards 1, 5, 3 · Table 2 draws 4, 2, 7 · Table
 
 ## Personas
 
-Assigned by table number, rotating: 1 Sentinel · 2 Ledger · 3 Northline · 4 Harbor Lane · 5 Sentinel · 6 Ledger · 7 Northline · 8 Harbor Lane. Two tables per persona at eight tables — comparing two drafts of the same newsroom is its own finding.
+Five, assigned by table number in rotation:
 
-Change `SESSION.tableCount` in `content.js` once Burt confirms the room.
+| Table | Persona | What they are |
+|---|---|---|
+| 1, 6 | The Sentinel | Metro daily, unionized photo desk, a standards editor who takes the call at night |
+| 2, 7 | The Ledger | Five-person nonprofit, no photographer, no art budget |
+| 3, 8 | Northline | National digital video shop, 40 verticals a week |
+| 4 | Harbor Lane Pictures | Independent doc unit, deep archive, festival cut in five months |
+| 5 | Fieldnote | Solo visual journalist. No standards editor, no legal department, no masthead |
+
+At eight tables the first three double up, which is deliberate — comparing two drafts of the same newsroom is its own finding. Fieldnote is the one whose standard conflicts hardest with The Sentinel's, because the disclosure label is the brand rather than a policy.
+
+Change `SESSION.tableCount` in `content.js` once Burt confirms the room. The rotation and the card deal both adjust on their own.
 
 ---
 

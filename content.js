@@ -67,7 +67,36 @@ const PERSONAS = [
     ],
     pressure: 'The footage you need doesn\'t exist. It was never shot, or it burned, or the rights holder wants more than your whole archival budget.',
   },
+  {
+    id: 'fieldnote',
+    name: 'Fieldnote',
+    short: 'Fieldnote',
+    tag: 'Solo visual journalist · one camera · 240,000 followers · no masthead',
+    fields: [
+      ['Staff', 'You shoot it, cut it, post it, and answer the comments. A part-time editor in the months a grant covers one.'],
+      ['Money', 'Platform payouts, a Patreon, and freelance days for outlets that pay in 60 days. Two brand deals you turned down.'],
+      ['Who rules on ethics', 'You. There is nobody to call at night, and nobody else to blame in the morning.'],
+      ['Deadline reality', 'You post while the thing is still happening. A day late is a dead post.'],
+    ],
+    pressure: 'Your face is on all of it. A newsroom survives a correction; you survive on whether people still believe you. The accounts out-posting you generate half of what they publish, and their numbers keep going up.',
+  },
 ];
+
+// Short labels for the table picker, where the full name won't fit.
+PERSONAS.forEach(function (p) {
+  if (!p.short) p.short = p.name.replace(' Pictures', '');
+});
+
+// What to call the thing they're running. Two are newsrooms, two are shops,
+// and Fieldnote is a person — so the persona screen can't say "your newsroom".
+const KICKERS = {
+  sentinel: 'Your newsroom',
+  ledger: 'Your newsroom',
+  northline: 'Your shop',
+  harborlane: 'Your shop',
+  fieldnote: 'You,',
+};
+PERSONAS.forEach(function (p) { p.kicker = KICKERS[p.id] || 'Your newsroom'; });
 
 // The four sections the program promised. Order matters — it is the guide's order.
 const SECTIONS = [
