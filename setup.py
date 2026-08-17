@@ -165,11 +165,17 @@ def main():
         if match:
             base_id = match["id"]
             print(f"  Reusing {BASE_NAME} ({base_id})")
+        elif len(bases) == 1:
+            base_id = bases[0]["id"]
+            print(f"  Only one base on this token — using \"{bases[0]['name']}\" ({base_id})")
+        elif not bases:
+            print("  This token can't see any base. Grant it one at")
+            print("  https://airtable.com/create/tokens, then rerun.")
+            raise SystemExit(1)
         else:
-            workspaces = {b.get("permissionLevel"): b for b in bases}
-            print("  No base yet. Create one at https://airtable.com/create, then rerun with:")
-            print(f"    python3 setup.py {token[:12]}… appXXXXXXXX")
-            print(f"\n  Existing bases on this token: {', '.join(b['name'] for b in bases) or 'none'}")
+            print("  This token can see several bases. Pick one and rerun:\n")
+            for b in bases:
+                print(f"    python3 setup.py <token> {b['id']}   # {b['name']}")
             raise SystemExit(1)
 
     print(f"  Checking tables in {base_id}…")
