@@ -1,24 +1,17 @@
-// Airtable Configuration
-// IMPORTANT: Replace these values with your actual Airtable credentials
+// Airtable credentials for the LA workshop app (Aug 26, 2026).
+//
+// Same base as the Baltimore workshop, new table. This file ships to
+// GitHub Pages, so the token is readable by anyone who views source —
+// the existing trade-off for a static workshop app with no backend.
+//
+// ROTATE THIS TOKEN AFTER AUG 26. It has been public since May.
 
 const AIRTABLE_CONFIG = {
-    // Get your Personal Access Token from: https://airtable.com/create/tokens
-    apiKey: 'pat3LVXBKTf6tuPMi.0d4d52a227749ec5581ce54068d0abab2f53c4cfbef825ff80995c93d4fea0f5',
+  apiKey: 'pat3LVXBKTf6tuPMi.0d4d52a227749ec5581ce54068d0abab2f53c4cfbef825ff80995c93d4fea0f5',
+  baseId: 'appMg5TGC8PHo6vhp',
+  tableName: 'Table Standards',
 
-    // Your Base ID (found in the URL: https://airtable.com/YOUR_BASE_ID/...)
-    baseId: 'appMg5TGC8PHo6vhp',
-
-    // The name or ID of your table
-    // From your URL, the ID is tblU6Fuve5zwMLd9a
-    tableName: 'tblU6Fuve5zwMLd9a',
-
-    // API endpoint
-    get apiUrl() {
-        return `https://api.airtable.com/v0/${this.baseId}/${encodeURIComponent(this.tableName)}`;
-    }
+  get apiUrl() {
+    return 'https://api.airtable.com/v0/' + this.baseId + '/' + encodeURIComponent(this.tableName);
+  },
 };
-
-// Export for use in app.js
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = AIRTABLE_CONFIG;
-}

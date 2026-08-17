@@ -1,0 +1,191 @@
+// ============================================================
+// Content for the LA workshop, Aug 26 2026
+// "AI in visual storytelling: what are the best practices?"
+// Source of truth for this copy is the vault:
+//   Hacks-Hackers events/AI Forums 2026/Materials/Table decks.md
+// Keep the two in sync if the wording changes.
+// ============================================================
+
+const SESSION = {
+  title: 'AI in visual storytelling',
+  subtitle: 'What are the best practices?',
+  event: 'AI x Visual Journalism Forum · ASU California Center, Los Angeles',
+  date: 'Wednesday, August 26, 2026',
+  presenters: 'Eugen Bräunig (Archival Producers Alliance) · Alex Mahadevan and Tony Elkins (Poynter)',
+  sprintMinutes: 24,
+  swapMinutes: 13,
+  disclosureLimit: 14,
+  tableCount: 8,
+};
+
+const PERSONAS = [
+  {
+    id: 'sentinel',
+    name: 'The Sentinel',
+    tag: 'Metro daily · 180,000 Sunday · a city and two counties',
+    fields: [
+      ['Staff', 'Unionized photo desk — five shooters and a visuals director. One graphics person. A standards editor who answers to the EIC.'],
+      ['Money', 'Wire contracts with AP and Getty. A freelance budget that shrinks every year but still exists.'],
+      ['Who rules on ethics', "The standards editor. She'll take the call at night."],
+      ['Deadline reality', 'Web is continuous. Print closes at 10 p.m.'],
+    ],
+    pressure: "Everything you publish gets screenshotted by people hunting for a reason to call you liars. You've been burned once already, and the correction is still the top Google result.",
+  },
+  {
+    id: 'ledger',
+    name: 'The Ledger',
+    tag: 'Nonprofit · five people · one county · founded 2021',
+    fields: [
+      ['Staff', 'No staff photographer. A reporter shoots on a phone when there\'s time, which there usually isn\'t.'],
+      ['Money', 'No art budget. Heavy stock use on a Getty subscription you can barely justify to the board.'],
+      ['Who rules on ethics', "Nobody's title says standards. The EIC also runs ad sales."],
+      ['Deadline reality', 'A story goes up when it\'s done. Usually around 6 p.m.'],
+    ],
+    pressure: 'Most days it\'s run nothing or run something generated. There is no third option — and your funders read the site.',
+  },
+  {
+    id: 'northline',
+    name: 'Northline',
+    tag: 'National digital video · social-first · 40 vertical videos a week',
+    fields: [
+      ['Staff', 'Six editors, two motion designers, no photo desk. Everyone is 27.'],
+      ['Money', 'Tools budget is generous. Headcount isn\'t. Traffic targets are tied to your distribution deals.'],
+      ['Who rules on ethics', 'A managing editor with eleven other jobs.'],
+      ['Deadline reality', 'Same day. Sometimes same hour.'],
+    ],
+    pressure: 'The platform rewards volume and punishes latency. Your competitors are already generating B-roll, and nobody has called them on it.',
+  },
+  {
+    id: 'harborlane',
+    name: 'Harbor Lane Pictures',
+    tag: 'Independent nonfiction · two features in production, one in post',
+    fields: [
+      ['Staff', 'Director, producer, archival producer, an editor on contract.'],
+      ['Money', 'Grant-funded, plus a distributor advance. Archival licensing eats the budget.'],
+      ['Who rules on ethics', 'The director, informally. The distributor has no written AI policy and won\'t write one.'],
+      ['Deadline reality', 'Eighteen months to delivery. Festival cut due in five.'],
+    ],
+    pressure: 'The footage you need doesn\'t exist. It was never shot, or it burned, or the rights holder wants more than your whole archival budget.',
+  },
+];
+
+// The four sections the program promised. Order matters — it is the guide's order.
+const SECTIONS = [
+  {
+    id: 'primary',
+    num: '1',
+    title: 'Primary sources',
+    blurb: 'What must be real, and what you do when it doesn\'t exist.',
+    fields: [
+      { key: 'primaryReal', label: 'What has to be real, no exceptions', placeholder: 'The faces. The location. The…' },
+      { key: 'primaryMissing', label: 'When the real thing doesn\'t exist, we…', placeholder: 'Run nothing? Run a graphic? Run it with…' },
+    ],
+  },
+  {
+    id: 'transparency',
+    num: '2',
+    title: 'Transparency',
+    blurb: 'Allowed with disclosure — and the exact words the reader sees.',
+    fields: [
+      { key: 'transparencyAllowed', label: 'Allowed with disclosure', placeholder: 'What you will run, so long as you say so.' },
+      {
+        key: 'disclosureLine',
+        label: 'The exact words that appear on the image',
+        sublabel: '14 words or fewer. Not a policy sentence — the words a reader actually sees.',
+        placeholder: 'Write the label itself.',
+        counted: true,
+      },
+    ],
+  },
+  {
+    id: 'legal',
+    num: '3',
+    title: 'Legal exposure',
+    blurb: 'Rights, releases, likeness — the thing you\'d have to defend.',
+    fields: [
+      { key: 'legalDefend', label: 'Rights, releases, likeness — what we\'d have to defend', placeholder: 'The call from a lawyer you can survive.' },
+      { key: 'legalWontTouch', label: 'What we won\'t touch because of it', placeholder: 'The call you can\'t.' },
+    ],
+  },
+  {
+    id: 'people',
+    num: '4',
+    title: 'Simulating real people',
+    blurb: 'The hardest one — and where the doc rules and the news rules split.',
+    fields: [
+      { key: 'peopleNever', label: 'Never', placeholder: 'No exceptions, no deadline, no argument.' },
+      { key: 'peopleOnlyIf', label: 'Only if', placeholder: 'The conditions, all of them.' },
+      { key: 'peopleSignoff', label: 'Who signs off', placeholder: 'A job title, not a committee.' },
+    ],
+  },
+];
+
+const SIX_PM = {
+  key: 'sixPm',
+  title: 'The 6 p.m. question',
+  prompt: 'A case comes up that this sheet doesn\'t cover. It\'s 6 p.m. There\'s no time for a meeting. Who decides?',
+  placeholder: 'Name the chair, not the process.',
+};
+
+// Nine cards. Each table draws three in the swap round.
+const CASE_CARDS = [
+  {
+    n: 1,
+    text: 'A source requires anonymity. Instead of the backlit silhouette, the desk runs an AI-generated portrait — a face belonging to no one — labeled as such.',
+    ask: 'Does the standard in front of you allow it? Where does it say so?',
+    splitter: true,
+  },
+  {
+    n: 2,
+    text: 'A real photo of a real family, retouched by the family before they sent it, moves on the wires. The wire kills it two days later. No AI was involved anywhere.',
+    ask: 'Does this standard reach it, or was it written about the tool instead of the claim?',
+  },
+  {
+    n: 3,
+    text: 'A 1930s photograph, colorized and upscaled, opens the documentary. The original is in the credits.',
+    ask: 'Allowed? Disclosed? Where on the screen?',
+  },
+  {
+    n: 4,
+    text: 'A wildfire photo shot horizontal. Generative fill extends the sky so it crops vertical for social. Nothing is added but sky.',
+    ask: 'Is the sky a claim?',
+    splitter: true,
+  },
+  {
+    n: 5,
+    text: "The league asks that a sponsor's logo be removed from a sports photo before publication. The desk does it.",
+    ask: 'Which section of this standard covers a commercial request?',
+  },
+  {
+    n: 6,
+    text: 'Faces in a protest photo are blurred automatically to protect people from arrest. The tool is AI.',
+    ask: 'Same rules as any other alteration, or a carve-out? Write the carve-out.',
+  },
+  {
+    n: 7,
+    text: 'A shooting is reconstructed as a graphic, built entirely from the police report. No footage exists.',
+    ask: 'What does the label say, and does it name the police report as the only source?',
+  },
+  {
+    n: 8,
+    text: 'Nobody could be sent to the building, so the establishing shot is generated. It looks like the building.',
+    ask: 'Allowed at all? If yes, what does the reader see?',
+  },
+  {
+    n: 9,
+    text: "A dead subject's own letters are read aloud in a synthetic version of his voice. The family gave permission.",
+    ask: 'Whose consent is the one that matters? Write the rule.',
+    splitter: true,
+  },
+];
+
+// Phrases that tell a reader nothing. Triggers the nudge under the disclosure field.
+const EMPTY_LABEL_PATTERNS = [
+  /^\s*ai (was )?(used|involved)/i,
+  /^\s*(this )?(image|photo|picture|video)? ?(was )?(created|made|generated|produced) (with|by|using) ai/i,
+  /^\s*ai[- ]generated\.?\s*$/i,
+  /^\s*generated (with|by|using) ai\.?\s*$/i,
+  /^\s*created with (the help of )?ai/i,
+  /^\s*(contains|includes) ai/i,
+  /^\s*made with ai\.?\s*$/i,
+];

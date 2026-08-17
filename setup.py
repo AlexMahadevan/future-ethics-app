@@ -1,0 +1,167 @@
+#!/usr/bin/env python3
+"""One-command setup for the LA workshop app.
+
+    python3 setup.py                 # reads credentials already in config.js
+    python3 setup.py pat_YOUR_TOKEN  # or pass a token, and it writes config.js
+
+Builds the "Table Standards" table with the right fields. Safe to run twice —
+it adds missing fields rather than duplicating them.
+
+The token needs these scopes:
+    data.records:read  data.records:write  schema.bases:read  schema.bases:write
+
+If yours only has the data scopes, pass an existing base id as well:
+    python3 setup.py pat_YOUR_TOKEN appXXXXXXXX
+and build the table by hand from the field list this prints.
+"""
+
+import json
+import os
+import re
+import sys
+import urllib.error
+import urllib.request
+
+API = "https://api.airtable.com/v0"
+TABLE_NAME = "Table Standards"
+BASE_NAME = "LA Visual Standards — Aug 26 2026"
+
+FIELDS = [
+    ("Table", "number"),
+    ("Persona", "singleLineText"),
+    ("Scribe", "singleLineText"),
+    ("Primary sources — must be real", "multilineText"),
+    ("Primary sources — when it doesn't exist", "multilineText"),
+    ("Transparency — allowed with disclosure", "multilineText"),
+    ("Disclosure line", "multilineText"),
+    ("Legal — what we'd defend", "multilineText"),
+    ("Legal — what we won't touch", "multilineText"),
+    ("People — never", "multilineText"),
+    ("People — only if", "multilineText"),
+    ("People — who signs off", "multilineText"),
+    ("The 6 p.m. question", "multilineText"),
+    ("Corrections", "multilineText"),
+    ("Cards drawn", "singleLineText"),
+    ("Status", "singleLineText"),
+    ("Updated", "singleLineText"),
+]
+
+
+def field_spec(name, kind):
+    spec = {"name": name, "type": kind}
+    if kind == "number":
+        spec["options"] = {"precision": 0}
+    return spec
+
+
+def call(url, token, method="GET", payload=None):
+    data = json.dumps(payload).encode() if payload is not None else None
+    req = urllib.request.Request(url, data=data, method=method)
+    req.add_header("Authorization", f"Bearer {token}")
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(req) as r:
+            return json.load(r)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        raise SystemExit(f"\n  Airtable said {e.code}:\n  {body}\n")
+
+
+def read_existing_config():
+    """Pull apiKey/baseId out of config.js so the token stays out of shell history."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.js")
+    if not os.path.exists(path):
+        return None, None
+    with open(path) as fh:
+        text = fh.read()
+
+    def grab(key):
+        m = re.search(key + r"\s*:\s*['\"]([^'\"]+)['\"]", text)
+        return m.group(1) if m else None
+
+    return grab("apiKey"), grab("baseId")
+
+
+def main():
+    args = [a.strip() for a in sys.argv[1:]]
+    token = args[0] if args else None
+    base_id = args[1] if len(args) > 1 else None
+
+    from_config = False
+    if not token:
+        token, base_id = read_existing_config()
+        if not token:
+            raise SystemExit(__doc__)
+        from_config = True
+        print("  Using the credentials already in config.js.")
+
+    if not token.startswith("pat"):
+        raise SystemExit("  That doesn't look like a personal access token (should start with 'pat').")
+
+    if not base_id:
+        print("  Looking for an existing base…")
+        bases = call(f"{API}/meta/bases", token).get("bases", [])
+        match = next((b for b in bases if b["name"] == BASE_NAME), None)
+        if match:
+            base_id = match["id"]
+            print(f"  Reusing {BASE_NAME} ({base_id})")
+        else:
+            workspaces = {b.get("permissionLevel"): b for b in bases}
+            print("  No base yet. Create one at https://airtable.com/create, then rerun with:")
+            print(f"    python3 setup.py {token[:12]}… appXXXXXXXX")
+            print(f"\n  Existing bases on this token: {', '.join(b['name'] for b in bases) or 'none'}")
+            raise SystemExit(1)
+
+    print(f"  Checking tables in {base_id}…")
+    tables = call(f"{API}/meta/bases/{base_id}/tables", token).get("tables", [])
+    existing = next((t for t in tables if t["name"] == TABLE_NAME), None)
+
+    if existing:
+        have = {f["name"] for f in existing["fields"]}
+        missing = [(n, k) for n, k in FIELDS if n not in have]
+        if missing:
+            print(f"  Adding {len(missing)} missing field(s)…")
+            for name, kind in missing:
+                call(
+                    f"{API}/meta/bases/{base_id}/tables/{existing['id']}/fields",
+                    token, "POST", field_spec(name, kind),
+                )
+                print(f"    + {name}")
+        else:
+            print("  Table already has every field.")
+    else:
+        print(f"  Creating '{TABLE_NAME}'…")
+        call(
+            f"{API}/meta/bases/{base_id}/tables",
+            token, "POST",
+            {"name": TABLE_NAME, "fields": [field_spec(n, k) for n, k in FIELDS]},
+        )
+        print("  Created.")
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    if from_config:
+        print("\n  config.js already points at this table. Nothing to write.")
+        print("  Local test:  python3 -m http.server 8000  →  http://localhost:8000\n")
+        return
+
+    with open(os.path.join(here, "config.js"), "w") as fh:
+        fh.write(
+            "// Written by setup.py. Workshop-only credentials — delete the token\n"
+            "// in Airtable after Aug 26, 2026.\n\n"
+            "const AIRTABLE_CONFIG = {\n"
+            f"  apiKey: '{token}',\n"
+            f"  baseId: '{base_id}',\n"
+            f"  tableName: '{TABLE_NAME}',\n\n"
+            "  get apiUrl() {\n"
+            "    return 'https://api.airtable.com/v0/' + this.baseId + '/' + encodeURIComponent(this.tableName);\n"
+            "  },\n"
+            "};\n"
+        )
+
+    print("\n  Wrote config.js. You're set.")
+    print("  Local test:  python3 -m http.server 8000  →  http://localhost:8000")
+    print("  Then deploy: git add -A && git commit -m 'config' && git push\n")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,411 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Future Ethics Decision Game | Poynter Institute</title>
-    <meta name="description"
-        content="Interactive workshop game exploring ethical decisions in future journalism scenarios">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI in visual storytelling — the room's standard</title>
+<meta name="description" content="The one-page guide written live by the room at the AI x Visual Journalism Forum, Los Angeles, Aug 26 2026.">
+<link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div class="app-container">
-        <!-- Welcome Screen -->
-        <div id="welcome-screen" class="screen active">
-            <div class="welcome-content">
-                <h1 class="main-title">Let's build newsroom ethics policies of the future</h1>
-                <p class="subtitle">An AI future mapping exercise</p>
-                <p class="description">
-                    Explore 3 future scenarios and identify the ethical decisions and guardrails newsrooms will need to
-                    make.
-                </p>
 
-                <div class="team-input-container">
-                    <label for="team-name">Enter Your Team Name</label>
-                    <input type="text" id="team-name" placeholder="e.g., Team Phoenix" autocomplete="off">
-                </div>
+<!-- sync pill, fixed, all screens -->
+<div id="sync" class="sync" hidden><span class="sync-dot"></span><span id="sync-text">Saved</span></div>
 
-                <button id="start-btn" class="primary-btn" disabled>
-                    Begin Journey
-                    <span class="btn-arrow">&rarr;</span>
-                </button>
+<main id="app">
 
-                <div class="poynter-credit">
-                    <p>A workshop tool by the Poynter Institute</p>
-                    <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.8;">
-                        <a href="https://www.poynter.org/ai-ethics-journalism/ai-ethics-guidelines/" target="_blank"
-                            rel="noopener" style="color: inherit; text-decoration: underline;">Read Poynter's AI Ethics
-                            Guidelines &rarr;</a>
-                    </p>
-                    <button id="reset-session-link" class="text-link-btn">Reset Session</button>
-                </div>
-            </div>
-        </div>
+  <!-- ============ JOIN ============ -->
+  <section id="screen-join" class="screen active">
+    <div class="wrap wrap-narrow">
+      <p class="kicker">AI x Visual Journalism Forum · Los Angeles</p>
+      <h1 class="display">AI in visual storytelling</h1>
+      <p class="lede">One page. Four sections. You write it.</p>
 
-        <!-- Selection Screen -->
-        <div id="selection-screen" class="screen">
-            <div class="selection-container">
-                <h1 class="screen-title">Choose Your Scenario</h1>
-                <p class="screen-subtitle">Select a future journalism scenario to explore</p>
-                <div id="scenarios-grid" class="scenarios-grid">
-                    <!-- Scenario cards will be rendered here -->
-                </div>
-            </div>
-        </div>
+      <p class="body-copy">
+        Every table drafts a visual standard for a newsroom that isn't theirs. At 3:33 we read the
+        disclosure labels out loud. What you write here becomes the guide the room takes home.
+      </p>
 
-        <!-- Path Selection Screen -->
-        <div id="path-screen" class="screen">
-            <div class="phase-container">
-                <div class="progress-stepper">
-                    <div class="step active">
-                        <span class="step-number">1</span>
-                        <span class="step-label">Choose Path</span>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step">
-                        <span class="step-number">2</span>
-                        <span class="step-label">Issues</span>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step">
-                        <span class="step-number">3</span>
-                        <span class="step-label">Safeguards</span>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step">
-                        <span class="step-number">4</span>
-                        <span class="step-label">Reflection</span>
-                    </div>
-                </div>
+      <div class="field">
+        <label for="table-select">Which table are you?</label>
+        <div id="table-grid" class="table-grid"></div>
+        <select id="table-select" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
+      </div>
 
-                <!-- Timer -->
-                <div class="timer-bar hidden">
-                    <span class="timer-display"></span>
-                </div>
+      <div class="field">
+        <label for="scribe">Scribe <span class="opt">optional — who's typing</span></label>
+        <input type="text" id="scribe" placeholder="First name" autocomplete="off">
+      </div>
 
-                <div class="phase-header">
-                    <h2 id="path-scenario-title" class="scenario-title"></h2>
-                </div>
+      <button id="join-btn" class="btn btn-primary btn-block" disabled>Pick a table to start</button>
 
-                <div class="path-story">
-                    <button class="story-toggle" id="story-toggle">
-                        <h4>The Story <span class="toggle-icon" id="toggle-icon">+</span></h4>
-                    </button>
-                    <div class="story-body collapsed" id="story-body">
-                        <p id="path-story-text"></p>
-                        <div class="path-signals">
-                            <h4>Strong Signals</h4>
-                            <ul id="path-signals-list"></ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="path-selection">
-                    <h3 class="path-prompt">Your newsroom faces this future. Which path do you take?</h3>
-                    <div id="paths-grid" class="paths-grid">
-                        <!-- Path cards will be rendered here -->
-                    </div>
-                </div>
-
-                <div class="navigation mt-auto">
-                    <button id="path-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">&larr;</span> Scenarios
-                    </button>
-                    <span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ethical Issues Screen (Phase 2) -->
-        <div id="ethics-screen" class="screen">
-            <div class="phase-container">
-                <div class="progress-stepper">
-                    <div class="step completed">
-                        <span class="step-number">&#10003;</span>
-                        <span class="step-label">Path</span>
-                    </div>
-                    <div class="step-connector completed"></div>
-                    <div class="step active">
-                        <span class="step-number">2</span>
-                        <span class="step-label">Issues</span>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step">
-                        <span class="step-number">3</span>
-                        <span class="step-label">Safeguards</span>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step">
-                        <span class="step-number">4</span>
-                        <span class="step-label">Reflection</span>
-                    </div>
-                </div>
-
-                <!-- Timer -->
-                <div class="timer-bar hidden">
-                    <span class="timer-display"></span>
-                </div>
-
-                <div class="phase-header">
-                    <span class="phase-badge">Phase 2: Ethical Issues</span>
-                    <h2 id="ethics-scenario-title" class="scenario-title"></h2>
-                </div>
-
-                <div class="chosen-path-banner" id="chosen-path-banner">
-                    <span class="chosen-path-label">Your chosen path:</span>
-                    <span class="chosen-path-text" id="chosen-path-text"></span>
-                </div>
-
-                <div class="phase-layout">
-                    <div class="scenario-info-panel">
-                        <div class="info-group">
-                            <h4>The Tension</h4>
-                            <p id="ethics-tension-text"></p>
-                        </div>
-                    </div>
-
-                    <div class="input-panel">
-                        <h3>What ethical issues does this path create?</h3>
-                        <p class="input-hint">Given the path your team chose, what ethical challenges arise? <span
-                                id="issues-count" class="count-badge">0 issues</span></p>
-
-                        <div class="issue-input-container">
-                            <textarea id="issue-input" placeholder="e.g., Loss of human editorial oversight..."
-                                rows="2"></textarea>
-                            <button id="add-issue-btn" class="add-btn">+ Add Issue</button>
-                        </div>
-
-                        <div id="issues-list" class="issues-list">
-                            <!-- Added issues will appear here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="navigation mt-auto">
-                    <button id="ethics-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">&larr;</span> Change Path
-                    </button>
-                    <button id="ethics-next-btn" class="nav-btn primary-btn" disabled>
-                        Next: Safeguards <span class="btn-arrow">&rarr;</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Safeguards Screen (Phase 3) -->
-        <div id="safeguards-screen" class="screen">
-            <div class="phase-container">
-                <div class="progress-stepper">
-                    <div class="step completed">
-                        <span class="step-number">&#10003;</span>
-                        <span class="step-label">Path</span>
-                    </div>
-                    <div class="step-connector completed"></div>
-                    <div class="step completed">
-                        <span class="step-number">&#10003;</span>
-                        <span class="step-label">Issues</span>
-                    </div>
-                    <div class="step-connector completed"></div>
-                    <div class="step active">
-                        <span class="step-number">3</span>
-                        <span class="step-label">Safeguards</span>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step">
-                        <span class="step-number">4</span>
-                        <span class="step-label">Reflection</span>
-                    </div>
-                </div>
-
-                <!-- Timer -->
-                <div class="timer-bar hidden">
-                    <span class="timer-display"></span>
-                </div>
-
-                <div class="phase-header">
-                    <span class="phase-badge">Phase 3: Safeguards & Guidelines</span>
-                    <h2 id="safeguards-scenario-title" class="scenario-title"></h2>
-                </div>
-
-                <div class="phase-layout">
-                    <div class="scenario-info-panel">
-                        <div class="info-group">
-                            <h4>Your Chosen Path</h4>
-                            <p id="safeguards-chosen-path"></p>
-                        </div>
-                        <div class="info-group">
-                            <h4>Your Ethical Issues</h4>
-                            <ul id="selected-issues-list"></ul>
-                        </div>
-                    </div>
-
-                    <div class="input-panel">
-                        <h3>Safeguards & New Ethics Guidelines</h3>
-                        <p class="input-hint">What policies would your newsroom implement to address these issues?
-                            <span id="safeguards-count" class="count-badge">0 safeguards</span>
-                        </p>
-
-                        <div class="safeguard-input-container">
-                            <textarea id="safeguard-input"
-                                placeholder="e.g., Require human review for all AI-generated content before publication..."
-                                rows="2"></textarea>
-
-                            <div class="safeguard-tags-input">
-                                <span class="tags-label">Tag (optional):</span>
-                                <div class="tag-pills-inline" id="tag-pills">
-                                    <button type="button" class="tag-toggle" data-value="Technical">Technical</button>
-                                    <button type="button" class="tag-toggle" data-value="Editorial">Editorial</button>
-                                    <button type="button" class="tag-toggle" data-value="Training">Training</button>
-                                    <button type="button" class="tag-toggle"
-                                        data-value="Transparency">Transparency</button>
-                                    <button type="button" class="tag-toggle"
-                                        data-value="Organizational">Organizational</button>
-                                </div>
-                            </div>
-
-                            <button id="add-safeguard-btn" class="add-btn">+ Add Safeguard</button>
-                        </div>
-
-                        <div id="safeguards-list" class="safeguards-list">
-                            <!-- Added safeguards will appear here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="navigation mt-auto">
-                    <button id="safeguards-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">&larr;</span> Back to Issues
-                    </button>
-                    <button id="safeguards-next-btn" class="nav-btn primary-btn" disabled>
-                        Next: Reflection <span class="btn-arrow">&rarr;</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Reflection Screen (Phase 4) -->
-        <div id="reflection-screen" class="screen">
-            <div class="phase-container">
-                <div class="progress-stepper">
-                    <div class="step completed">
-                        <span class="step-number">&#10003;</span>
-                        <span class="step-label">Path</span>
-                    </div>
-                    <div class="step-connector completed"></div>
-                    <div class="step completed">
-                        <span class="step-number">&#10003;</span>
-                        <span class="step-label">Issues</span>
-                    </div>
-                    <div class="step-connector completed"></div>
-                    <div class="step completed">
-                        <span class="step-number">&#10003;</span>
-                        <span class="step-label">Safeguards</span>
-                    </div>
-                    <div class="step-connector completed"></div>
-                    <div class="step active">
-                        <span class="step-number">4</span>
-                        <span class="step-label">Reflection</span>
-                    </div>
-                </div>
-
-                <!-- Timer -->
-                <div class="timer-bar hidden">
-                    <span class="timer-display"></span>
-                </div>
-
-                <div class="phase-header">
-                    <span class="phase-badge">Phase 4: Reflection</span>
-                    <h2 id="reflection-scenario-title" class="scenario-title"></h2>
-                </div>
-
-                <div class="reflection-content">
-                    <p class="reflection-intro">Before we finish, take a moment to reflect on your decision-making
-                        process.</p>
-
-                    <div class="reflection-question">
-                        <label for="reflection-hardest">What was the hardest part of this scenario to decide?</label>
-                        <textarea id="reflection-hardest" rows="3" placeholder="What made this challenging?"></textarea>
-                    </div>
-
-                    <div class="reflection-question">
-                        <label for="reflection-disagreement">Where did your team disagree most?</label>
-                        <textarea id="reflection-disagreement" rows="3"
-                            placeholder="What points of tension emerged?"></textarea>
-                    </div>
-
-                    <div class="reflection-question">
-                        <label for="reflection-confidence">How confident are you in these safeguards?</label>
-                        <div class="confidence-scale">
-                            <input type="range" id="reflection-confidence" min="1" max="5" value="3">
-                            <div class="confidence-labels">
-                                <span>Not confident</span>
-                                <span id="confidence-value">3</span>
-                                <span>Very confident</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="navigation mt-auto">
-                    <button id="reflection-back-btn" class="nav-btn secondary-btn">
-                        <span class="btn-arrow">&larr;</span> Back to Safeguards
-                    </button>
-                    <button id="reflection-finish-btn" class="nav-btn primary-btn">
-                        View Final Summary <span class="btn-arrow">&rarr;</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Summary Screen -->
-        <div id="summary-screen" class="screen">
-            <div class="summary-container">
-                <h1 class="summary-title">Future Ethics Roadmap</h1>
-                <p class="summary-subtitle" id="team-name-display"></p>
-
-                <div id="summary-content" class="summary-content">
-                    <!-- Final results will be rendered here -->
-                </div>
-
-                <div class="summary-actions">
-                    <button id="export-btn" class="secondary-btn">
-                        Export Results
-                    </button>
-                    <button id="restart-btn" class="primary-btn">
-                        Start New Session
-                    </button>
-                </div>
-            </div>
-        </div>
+      <p class="fineprint">
+        Already started on another device? Pick the same table number and your draft comes back.
+        <a href="#/guide" class="quiet-link">See the guide so far</a>
+      </p>
     </div>
+  </section>
 
-    <!-- Loading Indicator -->
-    <div id="loading-indicator" class="loading-indicator">
-        <div class="spinner"></div>
-        <p>Saving to Airtable...</p>
+  <!-- ============ PERSONA ============ -->
+  <section id="screen-persona" class="screen">
+    <div class="wrap wrap-narrow">
+      <p class="kicker">Your newsroom for the next 24 minutes</p>
+      <div id="persona-card" class="persona-card"></div>
+      <div class="stack-btns">
+        <button id="persona-continue" class="btn btn-primary btn-block">Start drafting</button>
+        <button id="persona-back" class="btn btn-quiet">Wrong table</button>
+      </div>
     </div>
+  </section>
 
-    <!-- Scripts -->
-    <script src="config.js" onerror="console.log('config.js not found, using local storage only')"></script>
-    <script>
-        // Fallback if config.js is not present (e.g., on GitHub Pages)
-        if (typeof AIRTABLE_CONFIG === 'undefined') {
-            var AIRTABLE_CONFIG = { apiKey: '', baseId: '', tableName: '', get apiUrl() { return ''; } };
-        }
-    </script>
-    <script src="scenarios-fallback.js"></script>
-    <script src="app.js"></script>
+  <!-- ============ SPRINT ============ -->
+  <section id="screen-sprint" class="screen">
+    <header class="bar">
+      <div class="bar-left">
+        <span class="bar-kicker">The sprint</span>
+        <strong id="sprint-persona" class="bar-title"></strong>
+      </div>
+      <div class="bar-right">
+        <button id="sprint-persona-btn" class="chip">Persona</button>
+        <span id="sprint-timer" class="timer">24:00</span>
+      </div>
+    </header>
+
+    <div class="wrap wrap-narrow pad-bar">
+      <div id="sprint-sections"></div>
+
+      <div class="callout">
+        <h2 id="sixpm-title"></h2>
+        <p id="sixpm-prompt" class="q"></p>
+        <textarea id="f-sixPm" data-key="sixPm" rows="2"></textarea>
+      </div>
+
+      <button id="sprint-submit" class="btn btn-primary btn-block">Send our standard to the room</button>
+      <p class="fineprint">You can keep editing after you send. Nothing locks.</p>
+    </div>
+  </section>
+
+  <!-- ============ SWAP ============ -->
+  <section id="screen-swap" class="screen">
+    <header class="bar">
+      <div class="bar-left">
+        <span class="bar-kicker">Swap and break</span>
+        <strong class="bar-title">Break someone else's standard</strong>
+      </div>
+      <div class="bar-right">
+        <span id="swap-timer" class="timer">13:00</span>
+      </div>
+    </header>
+
+    <div class="wrap wrap-narrow pad-bar">
+      <div id="swap-received" class="received"></div>
+      <h2 class="section-head">Your three cards</h2>
+      <p class="q">For each one: can the standard above answer it? If not, write what the rule should have said. Your correction goes in the guide.</p>
+      <div id="swap-cards"></div>
+      <button id="swap-done" class="btn btn-primary btn-block">Send our corrections</button>
+    </div>
+  </section>
+
+  <!-- ============ DONE ============ -->
+  <section id="screen-done" class="screen">
+    <div class="wrap wrap-narrow center-col">
+      <p class="kicker">Table <span id="done-table"></span></p>
+      <h1 class="display">You're in the guide.</h1>
+      <p class="lede" id="done-line"></p>
+      <div class="stack-btns">
+        <a href="#/guide" class="btn btn-primary btn-block">Read the room's guide</a>
+        <button id="done-edit" class="btn btn-quiet">Back to our standard</button>
+      </div>
+      <p class="fineprint">Adopt it in your newsroom within 30 days — or send back the case that broke it.</p>
+    </div>
+  </section>
+
+  <!-- ============ GUIDE ============ -->
+  <section id="screen-guide" class="screen">
+    <div class="wrap pad-top">
+      <div class="guide-head">
+        <p class="kicker">AI x Visual Journalism Forum · Los Angeles · Aug 26, 2026</p>
+        <h1 class="display">What we agreed to, in one page</h1>
+        <p class="lede">Written live by the room. Poynter publishes the cleaned-up version within a week, with everyone here credited and the Archival Producers Alliance co-credited.</p>
+        <div class="guide-actions no-print">
+          <button id="guide-refresh" class="btn btn-quiet">Refresh</button>
+          <button id="guide-print" class="btn btn-quiet">Print / save PDF</button>
+          <a href="#/" class="btn btn-quiet">Back to my table</a>
+        </div>
+      </div>
+      <div id="guide-body"></div>
+    </div>
+  </section>
+
+  <!-- ============ FACILITATOR ============ -->
+  <section id="screen-facilitator" class="screen">
+    <header class="bar bar-dark">
+      <div class="bar-left">
+        <span class="bar-kicker">Facilitator</span>
+        <strong class="bar-title">The room</strong>
+      </div>
+      <div class="bar-right">
+        <span id="fac-status" class="timer">—</span>
+        <button id="fac-refresh" class="chip">Refresh</button>
+      </div>
+    </header>
+
+    <div class="wrap pad-bar">
+      <div id="fac-counts" class="counts"></div>
+
+      <h2 class="section-head">Disclosure lines <span class="q inline">— the read-aloud round</span></h2>
+      <p class="q no-print"><button id="fac-present" class="btn btn-quiet btn-sm">Present these full-screen</button></p>
+      <div id="fac-labels" class="label-board"></div>
+
+      <h2 class="section-head">Cards drawn</h2>
+      <div id="fac-cards" class="card-tally"></div>
+
+      <h2 class="section-head">Corrections from the swap</h2>
+      <div id="fac-corrections"></div>
+
+      <h2 class="section-head">Tables</h2>
+      <div id="fac-tables"></div>
+    </div>
+  </section>
+
+  <!-- ============ PRESENT (labels full screen) ============ -->
+  <section id="screen-present" class="screen present">
+    <div class="present-inner">
+      <p id="present-meta" class="present-meta"></p>
+      <blockquote id="present-line" class="present-line"></blockquote>
+      <p id="present-count" class="present-count"></p>
+    </div>
+    <div class="present-nav no-print">
+      <button id="present-prev" class="chip">← Prev</button>
+      <span id="present-pos" class="present-pos"></span>
+      <button id="present-next" class="chip">Next →</button>
+      <a href="#/facilitator" class="chip">Exit</a>
+    </div>
+  </section>
+
+</main>
+
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="app.js"></script>
 </body>
-
 </html>
