@@ -213,8 +213,10 @@ function authHeaders() {
 }
 
 async function findRemoteByTable(n) {
+  // Coerce both sides to string so this works whether Table came out of the
+  // schema API as a number or out of a CSV import as text.
   const url = AIRTABLE_CONFIG.apiUrl +
-    '?maxRecords=1&filterByFormula=' + encodeURIComponent('{Table}=' + n);
+    '?maxRecords=1&filterByFormula=' + encodeURIComponent("({Table}&'')='" + n + "'");
   const res = await fetch(url, { headers: authHeaders() });
   if (!res.ok) return null;
   const data = await res.json();
@@ -235,7 +237,7 @@ async function fetchRoom() {
         try { cases = JSON.parse(r.fields.Corrections || '{}'); } catch (e) { cases = {}; }
         return {
           id: r.id,
-          table: r.fields.Table,
+          table: Number(r.fields.Table),
           persona: r.fields.Persona || '',
           scribe: r.fields.Scribe || '',
           status: r.fields.Status || 'draft',
@@ -243,7 +245,7 @@ async function fetchRoom() {
           cases: cases,
         };
       })
-      .filter(function (r) { return r.table != null; })
+      .filter(function (r) { return Number.isFinite(r.table); })
       .sort(function (a, b) { return a.table - b.table; });
     return state.room;
   } catch (e) {

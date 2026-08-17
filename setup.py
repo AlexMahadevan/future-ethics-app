@@ -15,6 +15,7 @@ If yours only has the data scopes, pass an existing base id as well:
 and build the table by hand from the field list this prints.
 """
 
+import csv
 import json
 import os
 import re
@@ -64,7 +65,60 @@ def call(url, token, method="GET", payload=None):
             return json.load(r)
     except urllib.error.HTTPError as e:
         body = e.read().decode()
+        if e.code in (401, 403):
+            raise NoSchemaAccess(body)
         raise SystemExit(f"\n  Airtable said {e.code}:\n  {body}\n")
+
+
+class NoSchemaAccess(Exception):
+    """The token can't read or write table schema — a very common PAT setup."""
+
+
+def write_import_csv(here):
+    """A CSV whose header row is the schema. Airtable builds the table from it."""
+    path = os.path.join(here, "airtable-import.csv")
+    headers = [name for name, _ in FIELDS]
+    sample = {
+        "Table": "1",
+        "Persona": "The Sentinel",
+        "Status": "delete this row",
+        "Corrections": "{}",
+    }
+    with open(path, "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(headers)
+        w.writerow([sample.get(h, "") for h in headers])
+    return path
+
+
+def explain_no_schema_access(here, base_id):
+    csv_path = write_import_csv(here)
+    print(f"""
+  Your token can read and write records, but it can't see or build tables.
+  That is the scope the Baltimore app never needed. Two ways forward — the
+  first also retires a token that has been public since May, so prefer it.
+
+  A. New token (about a minute, and it rotates the old one)
+
+     1. https://airtable.com/create/tokens  →  Create new token
+     2. Scopes: data.records:read, data.records:write,
+                schema.bases:read, schema.bases:write
+     3. Access: the base {base_id}
+     4. python3 setup.py pat_THE_NEW_TOKEN
+
+  B. Import the schema by hand (works with the token you already have)
+
+     Written for you: {csv_path}
+
+     1. Open base {base_id} in Airtable
+     2. Add a table  →  Import data  →  CSV file  →  pick that file
+     3. Rename the new table to exactly: {TABLE_NAME}
+     4. Delete the single sample row
+     5. Nothing else to run — config.js already points at it
+
+  Either way the app works offline-per-table in the meantime. What you lose
+  until this is done is the swap round and the facilitator console.
+""")
 
 
 def read_existing_config():
@@ -98,9 +152,15 @@ def main():
     if not token.startswith("pat"):
         raise SystemExit("  That doesn't look like a personal access token (should start with 'pat').")
 
+    here = os.path.dirname(os.path.abspath(__file__))
+
     if not base_id:
         print("  Looking for an existing base…")
-        bases = call(f"{API}/meta/bases", token).get("bases", [])
+        try:
+            bases = call(f"{API}/meta/bases", token).get("bases", [])
+        except NoSchemaAccess:
+            explain_no_schema_access(here, "your base")
+            raise SystemExit(1)
         match = next((b for b in bases if b["name"] == BASE_NAME), None)
         if match:
             base_id = match["id"]
@@ -113,6 +173,21 @@ def main():
             raise SystemExit(1)
 
     print(f"  Checking tables in {base_id}…")
+    try:
+        build_table(token, base_id)
+    except NoSchemaAccess:
+        explain_no_schema_access(here, base_id)
+        raise SystemExit(1)
+
+    if from_config:
+        print("\n  config.js already points at this table. Nothing to write.")
+        print("  Local test:  python3 -m http.server 8000  →  http://localhost:8000\n")
+        return
+
+    write_config(here, token, base_id)
+
+
+def build_table(token, base_id):
     tables = call(f"{API}/meta/bases/{base_id}/tables", token).get("tables", [])
     existing = next((t for t in tables if t["name"] == TABLE_NAME), None)
 
@@ -138,12 +213,8 @@ def main():
         )
         print("  Created.")
 
-    here = os.path.dirname(os.path.abspath(__file__))
-    if from_config:
-        print("\n  config.js already points at this table. Nothing to write.")
-        print("  Local test:  python3 -m http.server 8000  →  http://localhost:8000\n")
-        return
 
+def write_config(here, token, base_id):
     with open(os.path.join(here, "config.js"), "w") as fh:
         fh.write(
             "// Written by setup.py. Workshop-only credentials — delete the token\n"

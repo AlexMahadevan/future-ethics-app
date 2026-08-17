@@ -23,3 +23,6 @@ __pycache__/
 
 # Staging copy of the LA app — the served version lives at the repo root
 visual-standards/
+
+# Generated on demand by setup.py when the token lacks schema scopes
+airtable-import.csv
