@@ -53,6 +53,7 @@ const state = {
   timers: {},         // { sprint: startMs, swap: startMs }
   room: [],           // all records pulled from Airtable
   presentIndex: 0,
+  presentTable: null,   // anchor the read-aloud to a table, not an array slot
 };
 
 let saveTimer = null;
@@ -800,31 +801,57 @@ function renderFacilitator() {
 // present mode — the read-aloud round
 // ============================================================
 
-function enterPresent() {
+async function enterPresent() {
   renderPresent();
-  pollTimer = setInterval(async function () { await fetchRoom(); }, 15000);
+  await fetchRoom();
+  renderPresent();
+  clearInterval(pollTimer);
+  pollTimer = setInterval(async function () {
+    await fetchRoom();
+    renderPresent();          // the poll used to fetch without redrawing
+  }, 10000);
 }
 
 function renderPresent() {
   const labels = labelRows();
+
   if (!labels.length) {
+    const working = roomWithSelf().length;
     $('#present-meta').textContent = '';
-    $('#present-line').textContent = 'No labels written yet.';
-    $('#present-count').textContent = '';
+    $('#present-line').textContent = working
+      ? 'No labels yet — ' + working + ' table' + (working === 1 ? '' : 's') + ' working.'
+      : 'Waiting for the room.';
+    $('#present-count').textContent = 'This screen refreshes on its own.';
     $('#present-pos').textContent = '';
     return;
   }
-  if (state.presentIndex >= labels.length) state.presentIndex = 0;
-  if (state.presentIndex < 0) state.presentIndex = labels.length - 1;
-  const l = labels[state.presentIndex];
+
+  // Anchor to the table currently on screen rather than its array position, so a
+  // table joining mid-round can't slide a different label under you mid-sentence.
+  let i = labels.findIndex(function (l) { return l.table === state.presentTable; });
+  if (i < 0) {
+    i = state.presentIndex;
+    if (i >= labels.length) i = 0;
+    if (i < 0) i = labels.length - 1;
+  }
+  state.presentIndex = i;
+  state.presentTable = labels[i].table;
+
+  const l = labels[i];
   $('#present-meta').textContent = 'Table ' + l.table + ' · ' + l.persona;
   $('#present-line').textContent = '“' + l.line + '”';
   $('#present-count').textContent = l.words + ' words' + (l.over ? ' — over the limit' : '');
-  $('#present-pos').textContent = (state.presentIndex + 1) + ' / ' + labels.length;
+  $('#present-pos').textContent = (i + 1) + ' / ' + labels.length;
 }
 
 function movePresent(d) {
-  state.presentIndex += d;
+  const labels = labelRows();
+  if (!labels.length) return;
+  let i = state.presentIndex + d;
+  if (i >= labels.length) i = 0;
+  if (i < 0) i = labels.length - 1;
+  state.presentIndex = i;
+  state.presentTable = labels[i].table;
   renderPresent();
 }
 
@@ -919,6 +946,7 @@ function init() {
   });
   $('#fac-present').addEventListener('click', function () {
     state.presentIndex = 0;
+    state.presentTable = null;
     go('/present');
   });
 
