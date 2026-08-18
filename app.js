@@ -33,10 +33,11 @@ const FIELD_MAP = {
 
 const ANSWER_KEYS = Object.keys(FIELD_MAP);
 
-// Fixed deal. Table 1 gets 1,5,3 — table 2 gets 4,2,7 — table 3 gets 9,6,8.
-// All nine cards are drawn by table 3, and the three that split every room
-// (1, 4, 9) land on the first three tables. Tables 4+ repeat the cycle.
-const DEAL_ORDER = [1, 5, 3, 4, 2, 7, 9, 6, 8];
+// Fixed deal, four tables to a cycle:
+//   T1 → 1,5,3   T2 → 4,2,7   T3 → 9,6,8   T4 → 10,1,4
+// All ten cards are drawn by table 4, and the four that split every room
+// (1, 4, 9, 10) land inside the first cycle. Tables 5+ repeat it.
+const DEAL_ORDER = [1, 5, 3, 4, 2, 7, 9, 6, 8, 10, 1, 4];
 
 const LS_KEY = 'la-visual-standards-v1';
 
@@ -86,7 +87,7 @@ function personaForTable(n) {
 }
 
 function cardsForTable(n) {
-  const start = ((n - 1) % 3) * 3;
+  const start = ((n - 1) % 4) * 3;
   return DEAL_ORDER.slice(start, start + 3).map(function (num) {
     return CASE_CARDS.find(function (c) { return c.n === num; });
   });

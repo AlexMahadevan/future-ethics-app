@@ -156,7 +156,7 @@ const SIX_PM = {
   placeholder: 'Name the chair, not the process.',
 };
 
-// Nine cards. Each table draws three in the swap round.
+// Ten cards. Each table draws three in the swap round.
 const CASE_CARDS = [
   {
     n: 1,
@@ -204,6 +204,12 @@ const CASE_CARDS = [
     n: 9,
     text: "A dead subject's own letters are read aloud in a synthetic version of his voice. The family gave permission.",
     ask: 'Whose consent is the one that matters? Write the rule.',
+    splitter: true,
+  },
+  {
+    n: 10,
+    text: 'The art budget pays one freelance illustrator a month. This month the desk generated the image instead and kept the fee.',
+    ask: 'Is that an ethics question or a budget question? Show where your standard decides.',
     splitter: true,
   },
 ];
