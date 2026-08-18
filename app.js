@@ -188,6 +188,12 @@ async function pushRemote() {
       // so a second device at the same table edits the same standard.
       const existing = await findRemoteByTable(state.table);
       if (existing) {
+        if (localIsEmpty()) {
+          // Nothing of ours to save — take theirs rather than erase it.
+          hydrateFrom(existing);
+          setSync('', "Picked up this table's draft");
+          return;
+        }
         state.recordId = existing.id;
         persist();
         return pushRemote();
@@ -274,6 +280,27 @@ function roomWithSelf() {
   return rows.sort(function (a, b) { return a.table - b.table; });
 }
 
+function localIsEmpty() {
+  const noAnswers = !ANSWER_KEYS.some(function (k) { return (state.answers[k] || '').trim(); });
+  const noCases = !Object.keys(state.cases || {}).length;
+  return noAnswers && noCases;
+}
+
+// Pull a table's existing row down onto this device. Used when a second
+// device joins a table that is already working, so it sees the draft
+// instead of overwriting it with blanks.
+function hydrateFrom(record) {
+  ANSWER_KEYS.forEach(function (k) {
+    state.answers[k] = (record.fields[FIELD_MAP[k]] || '').trim();
+  });
+  try { state.cases = JSON.parse(record.fields.Corrections || '{}'); }
+  catch (e) { state.cases = {}; }
+  state.status = record.fields.Status || 'draft';
+  if (!state.scribe) state.scribe = record.fields.Scribe || '';
+  state.recordId = record.id;
+  persist();
+}
+
 function queueSave() {
   persist();
   clearTimeout(saveTimer);
@@ -342,6 +369,10 @@ function renderJoin() {
     b.className = 'table-btn' + (state.table === n ? ' selected' : '') + (taken ? ' taken' : '');
     b.innerHTML = n + '<small>' + esc(taken ? 'in use' : p.short) + '</small>';
     b.addEventListener('click', function () {
+      // Re-picking a number has to release the row we were writing to,
+      // or the PATCH just renames that row's Table field and it follows
+      // us around the room.
+      if (state.table !== n) state.recordId = null;
       state.table = n;
       persist();
       renderJoin();
@@ -919,9 +950,20 @@ function init() {
     persist();
   });
 
-  $('#join-btn').addEventListener('click', function () {
+  $('#join-btn').addEventListener('click', async function () {
     if (!state.table) return;
     persist();
+    // If this table already has a row and this device has nothing, pick the
+    // draft up. Covers a reload on a fresh browser and a second device.
+    if (airtableReady() && !state.recordId && localIsEmpty()) {
+      try {
+        const existing = await findRemoteByTable(state.table);
+        if (existing) {
+          hydrateFrom(existing);
+          setSync('', "Picked up table " + state.table + "'s draft");
+        }
+      } catch (e) { /* offline — carry on with a blank sheet */ }
+    }
     go('/persona');
   });
 
