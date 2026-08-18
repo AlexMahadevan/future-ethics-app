@@ -54,6 +54,7 @@ const state = {
   room: [],           // all records pulled from Airtable
   presentIndex: 0,
   presentTable: null,   // anchor the read-aloud to a table, not an array slot
+  receivedTable: null,  // which table's standard we were dealt in the swap
 };
 
 let saveTimer = null;
@@ -122,6 +123,7 @@ function persist() {
       status: state.status,
       recordId: state.recordId,
       timers: state.timers,
+      receivedTable: state.receivedTable,
     }));
   } catch (e) { /* private mode, quota — the app still works in-session */ }
 }
@@ -138,6 +140,7 @@ function restore() {
     state.status = d.status || 'draft';
     state.recordId = d.recordId || null;
     state.timers = d.timers || {};
+    state.receivedTable = d.receivedTable || null;
   } catch (e) { /* corrupt payload — start clean */ }
 }
 
@@ -170,19 +173,39 @@ function recordFields() {
   return f;
 }
 
-async function pushRemote() {
-  if (!airtableReady() || !state.table) return;
+// Saves are serialized: only one request chain runs at a time, and a save
+// requested mid-flight runs once more after it. Overlapping calls used to
+// race the create path — two POSTs before either recordId landed meant two
+// rows for one table — and a reordered pair of PATCHes could leave the older
+// body as the final word.
+let pushInFlight = null;
+let pushAgainAfter = false;
+
+function pushRemote() {
+  if (!airtableReady() || !state.table) return Promise.resolve();
+  if (pushInFlight) { pushAgainAfter = true; return pushInFlight; }
+  pushInFlight = doPush()
+    .catch(function () { setSync('error', 'Saved on this device only'); })
+    .then(function () {
+      pushInFlight = null;
+      if (pushAgainAfter) { pushAgainAfter = false; return pushRemote(); }
+    });
+  return pushInFlight;
+}
+
+async function doPush() {
   setSync('saving', 'Saving…');
-  const body = { fields: recordFields(), typecast: true };
-  try {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    // Body is rebuilt every attempt so a retry never ships stale content.
+    const body = JSON.stringify({ fields: recordFields(), typecast: true });
     let res;
     if (state.recordId) {
       res = await fetch(AIRTABLE_CONFIG.apiUrl + '/' + state.recordId, {
         method: 'PATCH',
         headers: authHeaders(),
-        body: JSON.stringify(body),
+        body: body,
       });
-      if (res.status === 404) { state.recordId = null; return pushRemote(); }
+      if (res.status === 404) { state.recordId = null; continue; }
     } else {
       // Adopt an existing row for this table if one is already out there,
       // so a second device at the same table edits the same standard.
@@ -194,23 +217,27 @@ async function pushRemote() {
           setSync('', "Picked up this table's draft");
           return;
         }
+        // We have some content and so do they: fill our blanks from their
+        // row before the first PATCH, so a second device that typed one
+        // field doesn't wipe the other nine.
+        mergeFrom(existing);
         state.recordId = existing.id;
         persist();
-        return pushRemote();
+        continue;
       }
       res = await fetch(AIRTABLE_CONFIG.apiUrl, {
         method: 'POST',
         headers: authHeaders(),
-        body: JSON.stringify(body),
+        body: body,
       });
     }
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (data.id) { state.recordId = data.id; persist(); }
+    if (data.id && !state.recordId) { state.recordId = data.id; persist(); }
     setSync('', 'Saved to the room');
-  } catch (e) {
-    setSync('error', 'Saved on this device only');
+    return;
   }
+  throw new Error('gave up after retries');
 }
 
 function authHeaders() {
@@ -237,7 +264,7 @@ async function fetchRoom() {
     const res = await fetch(AIRTABLE_CONFIG.apiUrl + '?pageSize=100', { headers: authHeaders() });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    state.room = (data.records || [])
+    const rows = (data.records || [])
       .map(function (r) {
         const a = {};
         ANSWER_KEYS.forEach(function (k) { a[k] = (r.fields[FIELD_MAP[k]] || '').trim(); });
@@ -249,11 +276,22 @@ async function fetchRoom() {
           persona: r.fields.Persona || '',
           scribe: r.fields.Scribe || '',
           status: r.fields.Status || 'draft',
+          updated: r.fields.Updated || '',
           answers: a,
           cases: cases,
         };
       })
-      .filter(function (r) { return Number.isFinite(r.table); })
+      .filter(function (r) { return Number.isFinite(r.table); });
+    // If a create race ever left two rows claiming one table, show the one
+    // with more content (tie: most recently updated) instead of both.
+    const byTable = {};
+    rows.forEach(function (r) {
+      const cur = byTable[r.table];
+      if (!cur) { byTable[r.table] = r; return; }
+      const a = filledCount(r.answers), b = filledCount(cur.answers);
+      if (a > b || (a === b && r.updated > cur.updated)) byTable[r.table] = r;
+    });
+    state.room = Object.keys(byTable).map(function (t) { return byTable[t]; })
       .sort(function (a, b) { return a.table - b.table; });
     return state.room;
   } catch (e) {
@@ -261,8 +299,15 @@ async function fetchRoom() {
   }
 }
 
+function filledCount(answers) {
+  return ANSWER_KEYS.filter(function (k) { return (answers[k] || '').trim(); }).length;
+}
+
 // Everything the room has, with this device's own draft merged in so the
-// guide is never missing the table that's reading it.
+// guide is never missing the table that's reading it. The local draft only
+// replaces the remote row when it has at least as much content — a stale
+// test draft on this device must never mask a fuller row written by the
+// real table on another device.
 function roomWithSelf() {
   const rows = state.room.slice();
   if (!state.table) return rows;
@@ -276,8 +321,19 @@ function roomWithSelf() {
     cases: state.cases,
   };
   const i = rows.findIndex(function (r) { return r.table === state.table; });
-  if (i >= 0) rows[i] = mine; else rows.push(mine);
+  if (i >= 0) {
+    if (filledCount(mine.answers) >= filledCount(rows[i].answers)) rows[i] = mine;
+  } else if (filledCount(mine.answers) || Object.keys(mine.cases || {}).length) {
+    rows.push(mine);
+  }
   return rows.sort(function (a, b) { return a.table - b.table; });
+}
+
+// The console surfaces (facilitator, present, export) read the room as it
+// is in Airtable and never inject this device's own state — the console is
+// not a table, and its leftover test drafts must not reach the projector.
+function roomForConsole() {
+  return state.room.slice();
 }
 
 function localIsEmpty() {
@@ -298,6 +354,27 @@ function hydrateFrom(record) {
   state.status = record.fields.Status || 'draft';
   if (!state.scribe) state.scribe = record.fields.Scribe || '';
   state.recordId = record.id;
+  persist();
+}
+
+// Fill this device's empty fields from an existing remote row without
+// touching anything already typed here. Used when two devices at one table
+// both have partial content.
+function mergeFrom(record) {
+  ANSWER_KEYS.forEach(function (k) {
+    if (!(state.answers[k] || '').trim()) {
+      state.answers[k] = (record.fields[FIELD_MAP[k]] || '').trim();
+    }
+  });
+  let theirs = {};
+  try { theirs = JSON.parse(record.fields.Corrections || '{}'); } catch (e) { theirs = {}; }
+  Object.keys(theirs).forEach(function (n) {
+    if (!state.cases[n] || !(state.cases[n].fix || '').trim()) {
+      state.cases[n] = theirs[n];
+    }
+  });
+  if (record.fields.Status === 'submitted') state.status = 'submitted';
+  if (!state.scribe) state.scribe = record.fields.Scribe || '';
   persist();
 }
 
@@ -372,7 +449,7 @@ function renderJoin() {
       // Re-picking a number has to release the row we were writing to,
       // or the PATCH just renames that row's Table field and it follows
       // us around the room.
-      if (state.table !== n) state.recordId = null;
+      if (state.table !== n) { state.recordId = null; state.receivedTable = null; }
       state.table = n;
       persist();
       renderJoin();
@@ -526,6 +603,13 @@ async function enterSwap() {
     '<p>Pulling another table\'s standard…</p></div>';
   await fetchRoom();
   renderReceived();
+  // A table that entered before its neighbour submitted shouldn't be stuck
+  // on the fallback — keep checking until a standard shows up.
+  clearInterval(pollTimer);
+  pollTimer = setInterval(async function () {
+    await fetchRoom();
+    renderReceived();
+  }, 8000);
 }
 
 function pickReceived() {
@@ -533,11 +617,21 @@ function pickReceived() {
     return r.table !== state.table && r.status === 'submitted' && r.answers.disclosureLine;
   });
   if (!others.length) return null;
+  // Once a table has been dealt a standard it keeps it — the pool grows as
+  // late tables submit, and re-picking mid-round would swap the document
+  // out from under a half-written correction.
+  if (state.receivedTable != null) {
+    const pinned = others.find(function (r) { return r.table === state.receivedTable; });
+    if (pinned) return pinned;
+  }
   const myPersona = personaForTable(state.table).name;
   const different = others.filter(function (r) { return r.persona !== myPersona; });
   const pool = different.length ? different : others;
   // Deterministic rotation so two tables rarely land on the same standard.
-  return pool[(state.table - 1) % pool.length];
+  const chosen = pool[(state.table - 1) % pool.length];
+  state.receivedTable = chosen.table;
+  persist();
+  return chosen;
 }
 
 function renderReceived() {
@@ -742,7 +836,7 @@ async function enterFacilitator() {
 }
 
 function labelRows() {
-  return roomWithSelf()
+  return roomForConsole()
     .filter(function (r) { return (r.answers.disclosureLine || '').trim(); })
     .map(function (r) {
       const line = r.answers.disclosureLine.trim();
@@ -758,7 +852,7 @@ function labelRows() {
 }
 
 function renderFacilitator() {
-  const rows = roomWithSelf();
+  const rows = roomForConsole();
   const submitted = rows.filter(function (r) { return r.status === 'submitted'; });
   const labels = labelRows();
 
@@ -847,7 +941,7 @@ function renderPresent() {
   const labels = labelRows();
 
   if (!labels.length) {
-    const working = roomWithSelf().length;
+    const working = roomForConsole().length;
     $('#present-meta').textContent = '';
     $('#present-line').textContent = working
       ? 'No labels yet — ' + working + ' table' + (working === 1 ? '' : 's') + ' working.'
@@ -891,7 +985,7 @@ function movePresent(d) {
 // ============================================================
 
 function exportMarkdown() {
-  const rows = roomWithSelf();
+  const rows = roomForConsole();
   let md = '# ' + SESSION.title + ' — the room\'s standard\n\n';
   md += SESSION.event + '\n' + SESSION.date + '\n\n';
   md += SESSION.presenters + '\n\n---\n\n';
@@ -967,6 +1061,13 @@ function init() {
     go('/persona');
   });
 
+  $('#reset-device').addEventListener('click', function () {
+    if (!confirm('Clear this device\'s table, draft and timers? The room\'s copy in Airtable is untouched.')) return;
+    try { localStorage.removeItem(LS_KEY); } catch (e) { /* fine */ }
+    location.hash = '';
+    location.reload();
+  });
+
   $('#persona-continue').addEventListener('click', function () { go('/sprint'); });
   $('#persona-back').addEventListener('click', function () { go('/'); });
   $('#sprint-persona-btn').addEventListener('click', function () { go('/persona'); });
@@ -1008,6 +1109,9 @@ function init() {
       exportMarkdown();
     }
   });
+
+  // Wifi coming back should flush anything typed while it was out.
+  window.addEventListener('online', function () { pushRemote(); });
 
   // Flush anything unsaved when the screen goes away.
   window.addEventListener('visibilitychange', function () {

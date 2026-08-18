@@ -108,6 +108,7 @@ a { color: var(--ink); }
 }
 
 .quiet-link { color: var(--soft); text-decoration: underline; text-underline-offset: 3px; }
+.linklike { font: inherit; font-size: 13px; background: none; border: 0; padding: 0; cursor: pointer; }
 .quiet-link:hover { color: var(--accent); }
 
 .opt { color: var(--soft); font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 12px; }
