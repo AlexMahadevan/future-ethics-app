@@ -29,7 +29,7 @@ const PERSONAS = [
     name: 'The Sentinel',
     tag: 'Metro daily · 180,000 Sunday · a city and two counties',
     fields: [
-      ['Staff', 'Unionized photo desk — five shooters and a visuals director. One graphics person. A standards editor who answers to the EIC.'],
+      ['Staff', 'Unionized photo desk — five photographers and a visuals director. One graphics person. A standards editor who answers to the EIC.'],
       ['Money', 'Wire contracts with AP and Getty. A freelance budget that shrinks every year but still exists.'],
       ['Who rules on ethics', "The standards editor. She'll take the call at night."],
       ['Deadline reality', 'Web is continuous. Print closes at 10 p.m.'],
