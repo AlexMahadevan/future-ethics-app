@@ -11,11 +11,16 @@ const SESSION = {
   subtitle: 'What are the best practices?',
   event: 'AI x Visual Journalism Forum · ASU California Center, Los Angeles',
   date: 'Wednesday, August 26, 2026',
-  presenters: 'Eugen Bräunig (Archival Producers Alliance) · Alex Mahadevan and Tony Elkins (Poynter)',
+  presenters: 'Eugen Braeunig (Archival Producers Alliance) · Alex Mahadevan and Tony Elkins (Poynter)',
   sprintMinutes: 24,
   swapMinutes: 13,
-  disclosureLimit: 14,
-  tableCount: 8,
+  disclosureLimit: 15,
+  // 88 registered as of 8/21 — call it 55-70 in the room on day two.
+  // Ten tables is 6-7 people each, and because personas cycle (n-1) % 5,
+  // ten lands exactly two of every persona. Eight left Fieldnote and
+  // Harbor Lane single; nine left Fieldnote alone. Pending ASU's room
+  // confirm, but the math doesn't move much either way.
+  tableCount: 10,
 };
 
 const PERSONAS = [
@@ -41,7 +46,7 @@ const PERSONAS = [
       ['Who rules on ethics', "Nobody's title says standards. The EIC also runs ad sales."],
       ['Deadline reality', 'A story goes up when it\'s done. Usually around 6 p.m.'],
     ],
-    pressure: 'Most days it\'s run nothing or run something generated. There is no third option — and your funders read the site.',
+    pressure: 'Most days the choice is run nothing or run something generated. And your funders read the site.',
   },
   {
     id: 'northline',
@@ -53,7 +58,7 @@ const PERSONAS = [
       ['Who rules on ethics', 'A managing editor with eleven other jobs.'],
       ['Deadline reality', 'Same day. Sometimes same hour.'],
     ],
-    pressure: 'The platform rewards volume and punishes latency. Your competitors are already generating B-roll, and nobody has called them on it.',
+    pressure: 'The platform buries anything slow. Your competitors are already generating B-roll, and nobody has called them on it.',
   },
   {
     id: 'harborlane',
@@ -75,10 +80,10 @@ const PERSONAS = [
     fields: [
       ['Staff', 'You shoot it, cut it, post it, and answer the comments. A part-time editor in the months a grant covers one.'],
       ['Money', 'Platform payouts, a Patreon, and freelance days for outlets that pay in 60 days. Two brand deals you turned down.'],
-      ['Who rules on ethics', 'You. There is nobody to call at night, and nobody else to blame in the morning.'],
+      ['Who rules on ethics', 'You. There is nobody to call at night.'],
       ['Deadline reality', 'You post while the thing is still happening. A day late is a dead post.'],
     ],
-    pressure: 'Your face is on all of it. A newsroom survives a correction; you survive on whether people still believe you. The accounts out-posting you generate half of what they publish, and their numbers keep going up.',
+    pressure: 'Your face is on all of it. If readers stop believing you, there is no masthead to hide behind. The accounts out-posting you generate half of what they publish, and their numbers keep going up.',
   },
 ];
 
@@ -120,7 +125,7 @@ const SECTIONS = [
       {
         key: 'disclosureLine',
         label: 'The exact words that appear on the image',
-        sublabel: '14 words or fewer. Not a policy sentence — the words a reader actually sees.',
+        sublabel: '15 words or fewer, exactly as they would sit on the image.',
         placeholder: 'Write the label itself.',
         counted: true,
       },
@@ -132,8 +137,8 @@ const SECTIONS = [
     title: 'Legal exposure',
     blurb: 'Rights, releases, likeness — the thing you\'d have to defend.',
     fields: [
-      { key: 'legalDefend', label: 'Rights, releases, likeness — what we\'d have to defend', placeholder: 'The call from a lawyer you can survive.' },
-      { key: 'legalWontTouch', label: 'What we won\'t touch because of it', placeholder: 'The call you can\'t.' },
+      { key: 'legalDefend', label: 'Rights, releases, likeness — what we\'d have to defend', placeholder: 'The uses you could defend if a lawyer called.' },
+      { key: 'legalWontTouch', label: 'What we won\'t touch because of it', placeholder: 'The uses you couldn\'t.' },
     ],
   },
   {
@@ -142,9 +147,9 @@ const SECTIONS = [
     title: 'Simulating real people',
     blurb: 'The hardest one — and where the doc rules and the news rules split.',
     fields: [
-      { key: 'peopleNever', label: 'Never', placeholder: 'No exceptions, no deadline, no argument.' },
-      { key: 'peopleOnlyIf', label: 'Only if', placeholder: 'The conditions, all of them.' },
-      { key: 'peopleSignoff', label: 'Who signs off', placeholder: 'A job title, not a committee.' },
+      { key: 'peopleNever', label: 'Never', placeholder: 'What stays banned even on deadline.' },
+      { key: 'peopleOnlyIf', label: 'Only if', placeholder: 'Every condition it would take.' },
+      { key: 'peopleSignoff', label: 'Who signs off', placeholder: 'One job title.' },
     ],
   },
 ];
@@ -153,7 +158,7 @@ const SIX_PM = {
   key: 'sixPm',
   title: 'The 6 p.m. question',
   prompt: 'A case comes up that this sheet doesn\'t cover. It\'s 6 p.m. There\'s no time for a meeting. Who decides?',
-  placeholder: 'Name the chair, not the process.',
+  placeholder: 'A name or a job title.',
 };
 
 // Ten cards. Each table draws three in the swap round.

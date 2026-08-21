@@ -37,6 +37,9 @@ const ANSWER_KEYS = Object.keys(FIELD_MAP);
 //   T1 → 1,5,3   T2 → 4,2,7   T3 → 9,6,8   T4 → 10,1,4
 // All ten cards are drawn by table 4, and the four that split every room
 // (1, 4, 9, 10) land inside the first cycle. Tables 5+ repeat it.
+// At ten tables the persona pairs (1&6, 2&7, 3&8, 4&9, 5&10) share at
+// most one card (4&9 both draw card 1), so two drafts of the same
+// newsroom get tested against different cases.
 const DEAL_ORDER = [1, 5, 3, 4, 2, 7, 9, 6, 8, 10, 1, 4];
 
 const LS_KEY = 'la-visual-standards-v1';
@@ -480,7 +483,9 @@ function personaCardHtml(p) {
     '<div class="pressure"><dt>Your pressure</dt><dd>' + esc(p.pressure) + '</dd></div>' +
     '</dl>' +
     '<footer><b>Your table\'s job:</b> fill in all four sections. Write the disclosure wording as ' +
-    'words a reader would actually see — ' + SESSION.disclosureLimit + ' or fewer. Then answer the 6 p.m. question.</footer>';
+    'words a reader would actually see — ' + SESSION.disclosureLimit + ' or fewer. Then answer the 6 p.m. question.' +
+    '<br><br>Nobody at your table has to have worked anywhere like this. The card is everything ' +
+    'this newsroom knows about itself — argue from it, not from your day job.</footer>';
 }
 
 function renderPersona() {
@@ -545,12 +550,12 @@ function updateCounter() {
   const nudgeHost = $('#nudge-disclosureLine');
   if (!nudgeHost) return;
   if (isGenericLabel(val)) {
-    nudgeHost.innerHTML = '<div class="nudge"><b>That is the label that costs trust.</b>' +
-      'It tells a reader nothing about what was done. What actually changed in the image?</div>';
+    nudgeHost.innerHTML = '<div class="nudge"><b>That label tells a reader nothing.</b>' +
+      'What changed in the image? Write that instead.</div>';
   } else if (n > SESSION.disclosureLimit) {
     nudgeHost.innerHTML = '<div class="nudge"><b>' + (n - SESSION.disclosureLimit) + ' word' +
       (n - SESSION.disclosureLimit === 1 ? '' : 's') + ' over.</b>' +
-      'Cut it down. A caption nobody finishes reading is a caption nobody reads.</div>';
+      'Cut it until it fits on the image.</div>';
   } else {
     nudgeHost.innerHTML = '';
   }
@@ -836,8 +841,18 @@ async function enterFacilitator() {
 }
 
 function labelRows() {
+  // Ordered by persona, then table, so the two drafts of the same newsroom
+  // sit next to each other — in the console and in present mode. The
+  // read-aloud gets its best moment from back-to-back labels for the same
+  // shop, and at ten tables every persona has a pair.
+  const order = {};
+  PERSONAS.forEach(function (p, i) { order[p.name] = i; });
   return roomForConsole()
     .filter(function (r) { return (r.answers.disclosureLine || '').trim(); })
+    .sort(function (a, b) {
+      const d = (order[a.persona] || 0) - (order[b.persona] || 0);
+      return d !== 0 ? d : a.table - b.table;
+    })
     .map(function (r) {
       const line = r.answers.disclosureLine.trim();
       return {
