@@ -111,7 +111,7 @@ const SECTIONS = [
   {
     id: 'stop',
     num: '1',
-    title: 'Where we stop',
+    title: 'What we do',
     blurb: 'Start with what you actually do with visuals: photos, video, infographics.',
     fields: [
       { key: 'doQuiet', label: 'We do this and don\'t disclose it', placeholder: 'Crop. Fix the color. Remove a trash can…' },
