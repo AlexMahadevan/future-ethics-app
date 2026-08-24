@@ -480,9 +480,9 @@ function personaCardHtml(p) {
     }).join('') +
     '<div class="pressure"><dt>Your pressure</dt><dd>' + esc(p.pressure) + '</dd></div>' +
     '</dl>' +
-    '<footer><b>Your table\'s job:</b> three lists — what you do quietly, what you do with a label, what you never do. ' +
-    'Then the label itself, as words a reader would actually see, ' + SESSION.disclosureLimit + ' or fewer. ' +
-    'Then the lines that hold, and the 6 p.m. question.' +
+    '<footer><b>Your table\'s job:</b> three lists — what you do without disclosing, what you disclose, what you don\'t do. ' +
+    'Then the disclosure itself, as words a reader would actually see, ' + SESSION.disclosureLimit + ' or fewer. ' +
+    'Then the hard limits, and the 6 p.m. question.' +
     '<br><br>Nobody at your table has to have worked anywhere like this. The card is everything ' +
     'this newsroom knows about itself — argue from it, not from your day job.</footer>';
 }
