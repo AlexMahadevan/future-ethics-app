@@ -2,7 +2,7 @@
 
 The digital table kit for **"AI in visual storytelling: what are the best practices?"** — AI x Visual Journalism Forum, ASU California Center, Los Angeles, Wed Aug 26 2026, 2:30–3:45 p.m.
 
-Replaces the printed persona cards, table sheet and case cards, and doubles as the shared doc: the four sections assemble themselves into the one-page guide the program promised.
+Replaces the printed persona cards, table sheet and case cards, and doubles as the shared doc: the sheet runs in working order (what we do → the label → what holds → who decides) and the answers regroup themselves into the four-section one-page guide the program promised.
 
 Session plan lives in the vault at `Hacks-Hackers events/AI Forums 2026/Session -- Drawing the Line.md`. Copy comes from `Materials/Table decks.md` — keep the two in sync.
 
@@ -21,7 +21,7 @@ The facilitator URL isn't linked from anywhere. Type it.
 
 ## What it does that paper can't
 
-- **The 14-word limit enforces itself.** Live counter under the disclosure field.
+- **The 15-word limit enforces itself.** Live counter under the disclosure field.
 - **It catches the label that costs trust.** Type "AI was used in the creation of this image" and the app tells the table it says nothing. Same check flags those labels on your console so you know which ones to read aloud.
 - **The swap round doesn't need shuffling.** The app pulls another table's finished standard — a different persona where it can — and deals three cards.
 - **The synthesis is done when the room empties.** Shift+E on the facilitator screen downloads the whole thing as markdown, ready for the vault.

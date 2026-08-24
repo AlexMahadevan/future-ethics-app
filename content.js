@@ -103,25 +103,28 @@ const KICKERS = {
 };
 PERSONAS.forEach(function (p) { p.kicker = KICKERS[p.id] || 'Your newsroom'; });
 
-// The four sections the program promised. Order matters — it is the guide's order.
+// The sheet, in the order a table actually works it: what we do → the words
+// under the picture → the lines that hold → who decides. The program promised
+// four named sections; those are GUIDE_SECTIONS below, and they are how the
+// guide, the export and Airtable are organized. The sheet is not.
 const SECTIONS = [
   {
-    id: 'primary',
+    id: 'stop',
     num: '1',
-    title: 'Primary sources',
-    blurb: 'What must be real, and what you do when it doesn\'t exist.',
+    title: 'Where we stop',
+    blurb: 'Start with what you actually do to pictures. Three lists.',
     fields: [
-      { key: 'primaryReal', label: 'What has to be real, no exceptions', placeholder: 'The faces. The location. The…' },
-      { key: 'primaryMissing', label: 'When the real thing doesn\'t exist, we…', placeholder: 'Run nothing? Run a graphic? Run it with…' },
+      { key: 'doQuiet', label: 'We do this and don\'t say anything', placeholder: 'Crop. Fix the color. Take out the trash can…' },
+      { key: 'doWithLabel', label: 'We do this, and we tell the reader', placeholder: 'Extend a background. Make an illustration…' },
+      { key: 'wontDo', label: 'We don\'t do this. Period.', placeholder: 'Fake a photo of something that happened…' },
     ],
   },
   {
-    id: 'transparency',
+    id: 'label',
     num: '2',
-    title: 'Transparency',
-    blurb: 'Allowed with disclosure — and the exact words the reader sees.',
+    title: 'The words under the picture',
+    blurb: 'For everything on the second list. Not a policy — the caption.',
     fields: [
-      { key: 'transparencyAllowed', label: 'Allowed with disclosure', placeholder: 'What you will run, so long as you say so.' },
       {
         key: 'disclosureLine',
         label: 'The exact words that appear on the image',
@@ -132,24 +135,57 @@ const SECTIONS = [
     ],
   },
   {
+    id: 'holds',
+    num: '3',
+    title: 'What never moves',
+    blurb: 'The lines that hold even at deadline.',
+    fields: [
+      { key: 'mustBeReal', label: 'What always has to be real', placeholder: 'The faces. The place. The…' },
+      { key: 'realPeople', label: 'Real people — faces, voices, the dead. One line, and who signs off', placeholder: 'Never? Only if…? Whose call?' },
+      { key: 'legalLine', label: 'What a lawyer would kill', placeholder: 'Likeness. Rights. Releases. Someone else\'s photo…' },
+    ],
+  },
+];
+
+// The guide, in the order the program promised. Same answers, regrouped.
+const GUIDE_SECTIONS = [
+  {
+    id: 'primary',
+    num: '1',
+    title: 'Primary sources',
+    blurb: 'What must be real, and what we won\'t fake.',
+    fields: [
+      { key: 'mustBeReal', label: 'Always real' },
+      { key: 'wontDo', label: 'We don\'t do this' },
+    ],
+  },
+  {
+    id: 'transparency',
+    num: '2',
+    title: 'Transparency',
+    blurb: 'What we do quietly, what we do with a label — and the label itself.',
+    fields: [
+      { key: 'doQuiet', label: 'No label needed' },
+      { key: 'doWithLabel', label: 'With a label' },
+      { key: 'disclosureLine', label: 'The label', counted: true },
+    ],
+  },
+  {
     id: 'legal',
     num: '3',
     title: 'Legal exposure',
-    blurb: 'Rights, releases, likeness — the thing you\'d have to defend.',
+    blurb: 'What a lawyer would kill.',
     fields: [
-      { key: 'legalDefend', label: 'Rights, releases, likeness — what we\'d have to defend', placeholder: 'The uses you could defend if a lawyer called.' },
-      { key: 'legalWontTouch', label: 'What we won\'t touch because of it', placeholder: 'The uses you couldn\'t.' },
+      { key: 'legalLine', label: 'Off limits' },
     ],
   },
   {
     id: 'people',
     num: '4',
     title: 'Simulating real people',
-    blurb: 'The hardest one — and where the doc rules and the news rules split.',
+    blurb: 'Faces, voices, the dead — the rule and who signs off.',
     fields: [
-      { key: 'peopleNever', label: 'Never', placeholder: 'What stays banned even on deadline.' },
-      { key: 'peopleOnlyIf', label: 'Only if', placeholder: 'Every condition it would take.' },
-      { key: 'peopleSignoff', label: 'Who signs off', placeholder: 'One job title.' },
+      { key: 'realPeople', label: 'The rule' },
     ],
   },
 ];

@@ -19,15 +19,13 @@
 // key in state.answers  ->  field name in Airtable
 
 const FIELD_MAP = {
-  primaryReal: 'Primary sources — must be real',
-  primaryMissing: "Primary sources — when it doesn't exist",
-  transparencyAllowed: 'Transparency — allowed with disclosure',
+  doQuiet: 'Stop — no label needed',
+  doWithLabel: 'Stop — with a label',
+  wontDo: "Stop — we don't do this",
   disclosureLine: 'Disclosure line',
-  legalDefend: "Legal — what we'd defend",
-  legalWontTouch: "Legal — what we won't touch",
-  peopleNever: 'People — never',
-  peopleOnlyIf: 'People — only if',
-  peopleSignoff: 'People — who signs off',
+  mustBeReal: 'Holds — always real',
+  realPeople: 'Holds — real people',
+  legalLine: 'Holds — legal',
   sixPm: 'The 6 p.m. question',
 };
 
@@ -482,8 +480,9 @@ function personaCardHtml(p) {
     }).join('') +
     '<div class="pressure"><dt>Your pressure</dt><dd>' + esc(p.pressure) + '</dd></div>' +
     '</dl>' +
-    '<footer><b>Your table\'s job:</b> fill in all four sections. Write the disclosure wording as ' +
-    'words a reader would actually see — ' + SESSION.disclosureLimit + ' or fewer. Then answer the 6 p.m. question.' +
+    '<footer><b>Your table\'s job:</b> three lists — what you do quietly, what you do with a label, what you never do. ' +
+    'Then the label itself, as words a reader would actually see, ' + SESSION.disclosureLimit + ' or fewer. ' +
+    'Then the lines that hold, and the 6 p.m. question.' +
     '<br><br>Nobody at your table has to have worked anywhere like this. The card is everything ' +
     'this newsroom knows about itself — argue from it, not from your day job.</footer>';
 }
@@ -650,37 +649,21 @@ function renderReceived() {
     return;
   }
   const a = r.answers;
-  const line = a.disclosureLine || '';
   host.innerHTML = '<div class="received">' +
     '<p class="who">You received Table ' + esc(r.table) + '</p>' +
     '<h2>' + esc(r.persona) + '</h2>' +
-    sec('1 · Primary sources', [
-      ['Must be real', a.primaryReal],
-      ["When it doesn't exist", a.primaryMissing],
-    ]) +
-    '<div class="rsec"><h3>2 · Transparency</h3>' +
-    (a.transparencyAllowed ? '<p class="rline">' + esc(a.transparencyAllowed) + '</p>' : '') +
-    (line ? '<div class="label-quote">' + esc(line) + '</div>' : '<p class="rline"><em>No label written.</em></p>') +
-    '</div>' +
-    sec('3 · Legal exposure', [
-      ["What we'd defend", a.legalDefend],
-      ["What we won't touch", a.legalWontTouch],
-    ]) +
-    sec('4 · Simulating real people', [
-      ['Never', a.peopleNever],
-      ['Only if', a.peopleOnlyIf],
-      ['Signs off', a.peopleSignoff],
-    ]) +
+    SECTIONS.map(function (sec) {
+      const rows = sec.fields.map(function (f) {
+        const v = (a[f.key] || '').trim();
+        if (!v) return '';
+        if (f.counted) return '<div class="label-quote">' + esc(v) + '</div>';
+        return '<p class="rline"><em>' + esc(f.label) + ':</em> ' + esc(v) + '</p>';
+      }).filter(Boolean).join('');
+      const blank = sec.id === 'label' ? '<p class="rline"><em>No label written.</em></p>' : '<p class="rline"><em>Left blank.</em></p>';
+      return '<div class="rsec"><h3>' + esc(sec.num) + ' · ' + esc(sec.title) + '</h3>' + (rows || blank) + '</div>';
+    }).join('') +
     (a.sixPm ? '<div class="rsec"><h3>At 6 p.m., who decides</h3><p class="rline">' + esc(a.sixPm) + '</p></div>' : '') +
     '</div>';
-
-  function sec(title, pairs) {
-    const rows = pairs.filter(function (p) { return p[1]; }).map(function (p) {
-      return '<p class="rline"><em>' + esc(p[0]) + ':</em> ' + esc(p[1]) + '</p>';
-    }).join('');
-    return '<div class="rsec"><h3>' + esc(title) + '</h3>' +
-      (rows || '<p class="rline"><em>Left blank.</em></p>') + '</div>';
-  }
 }
 
 function renderSwapCards() {
@@ -761,7 +744,7 @@ function renderGuide() {
     return;
   }
 
-  let html = SECTIONS.map(function (sec) {
+  let html = GUIDE_SECTIONS.map(function (sec) {
     const entries = rows.map(function (r) {
       const parts = sec.fields.map(function (f) {
         const v = (r.answers[f.key] || '').trim();
@@ -1005,7 +988,7 @@ function exportMarkdown() {
   md += SESSION.event + '\n' + SESSION.date + '\n\n';
   md += SESSION.presenters + '\n\n---\n\n';
 
-  SECTIONS.forEach(function (sec) {
+  GUIDE_SECTIONS.forEach(function (sec) {
     md += '## ' + sec.num + '. ' + sec.title + '\n\n_' + sec.blurb + '_\n\n';
     rows.forEach(function (r) {
       const parts = sec.fields.map(function (f) {
