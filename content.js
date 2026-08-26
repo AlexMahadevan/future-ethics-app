@@ -128,7 +128,7 @@ const SECTIONS = [
       {
         key: 'disclosureLine',
         label: 'The exact words that appear under an image, video or infographic — or on a watermark',
-        sublabel: '15 words or fewer.',
+        sublabel: 'As long as it needs to be — but a reader has to actually read it.',
         placeholder: 'Write the label itself.',
         counted: true,
       },

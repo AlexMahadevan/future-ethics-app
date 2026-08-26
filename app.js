@@ -481,7 +481,7 @@ function personaCardHtml(p) {
     '<div class="pressure"><dt>Your pressure</dt><dd>' + esc(p.pressure) + '</dd></div>' +
     '</dl>' +
     '<footer><b>Your table\'s job:</b> three lists — what you do without disclosing, what you disclose, what you don\'t do. ' +
-    'Then the disclosure itself, as words a reader would actually see, ' + SESSION.disclosureLimit + ' or fewer. ' +
+    'Then the disclosure itself, as words a reader would actually see. ' +
     'Then the hard limits, and the 6 p.m. question.' +
     '<br><br>Nobody at your table has to have worked anywhere like this. The card is everything ' +
     'this newsroom knows about itself — argue from it, not from your day job.</footer>';
@@ -505,7 +505,7 @@ function buildSprint() {
   host.innerHTML = SECTIONS.map(function (sec) {
     const subs = sec.fields.map(function (f) {
       const counter = f.counted
-        ? '<div class="counter-row"><span class="counter" id="count-' + f.key + '">0 / ' + SESSION.disclosureLimit + ' words</span></div>' +
+        ? '<div class="counter-row"><span class="counter" id="count-' + f.key + '">0 words</span></div>' +
           '<div id="nudge-' + f.key + '"></div>'
         : '';
       return '<div class="sub">' +
@@ -543,18 +543,14 @@ function updateCounter() {
   const n = wordCount(val);
   const c = $('#count-disclosureLine');
   if (c) {
-    c.textContent = n + ' / ' + SESSION.disclosureLimit + ' words';
-    c.className = 'counter' + (n === 0 ? '' : n > SESSION.disclosureLimit ? ' over' : ' ok');
+    c.textContent = n + ' word' + (n === 1 ? '' : 's');
+    c.className = 'counter' + (n === 0 ? '' : ' ok');
   }
   const nudgeHost = $('#nudge-disclosureLine');
   if (!nudgeHost) return;
   if (isGenericLabel(val)) {
     nudgeHost.innerHTML = '<div class="nudge"><b>That label tells a reader nothing.</b>' +
       'What changed in the image? Write that instead.</div>';
-  } else if (n > SESSION.disclosureLimit) {
-    nudgeHost.innerHTML = '<div class="nudge"><b>' + (n - SESSION.disclosureLimit) + ' word' +
-      (n - SESSION.disclosureLimit === 1 ? '' : 's') + ' over.</b>' +
-      'Cut it until it fits on the image.</div>';
   } else {
     nudgeHost.innerHTML = '';
   }
@@ -751,7 +747,7 @@ function renderGuide() {
         if (!v) return '';
         if (f.counted) {
           const n = wordCount(v);
-          const over = n > SESSION.disclosureLimit;
+          const over = false;
           return '<div class="guide-label' + (over ? ' over' : '') + '">' + esc(v) + '</div>' +
             (over ? '<p class="wordflag">' + n + ' words — over the limit</p>' : '');
         }
@@ -843,7 +839,7 @@ function labelRows() {
         persona: r.persona,
         line: line,
         words: wordCount(line),
-        over: wordCount(line) > SESSION.disclosureLimit,
+        over: false,
         generic: isGenericLabel(line),
       };
     });
