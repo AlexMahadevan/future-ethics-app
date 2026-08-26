@@ -253,6 +253,19 @@ const CASE_CARDS = [
     ask: 'Is that an ethics question or a budget question? Show where your standard decides.',
     splitter: true,
   },
+  // Cards 11 and 12 came out of the morning working session (Garcia / Cheung).
+  {
+    n: 11,
+    text: "A freelancer tones a photo in Lightroom: AI denoise, an AI-picked sky mask, nothing added and nothing removed. None of the tools say \"AI\" on them. She sends it in with no note.",
+    ask: 'Is this AI use under this standard? Does it get a label — and could she have known that from reading your rule?',
+    splitter: true,
+  },
+  {
+    n: 12,
+    text: "A nonprofit's social media manager can't get into the field. She generates the background in ChatGPT, drops it into Canva and lays the real words over it. Canva labels nothing.",
+    ask: 'Where does the AI come in — the image, the layout, the post? What does your standard require her to say, and where?',
+    splitter: true,
+  },
 ];
 
 // Phrases that tell a reader nothing. Triggers the nudge under the disclosure field.

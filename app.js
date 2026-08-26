@@ -38,7 +38,9 @@ const ANSWER_KEYS = Object.keys(FIELD_MAP);
 // At ten tables the persona pairs (1&6, 2&7, 3&8, 4&9, 5&10) share at
 // most one card (4&9 both draw card 1), so two drafts of the same
 // newsroom get tested against different cases.
-const DEAL_ORDER = [1, 5, 3, 4, 2, 7, 9, 6, 8, 10, 1, 4];
+// Slots 11 and 12 were repeats of 1 and 4; they now deal the two cards from the
+// morning working session, so tables 4 and 8 draw them.
+const DEAL_ORDER = [1, 5, 3, 4, 2, 7, 9, 6, 8, 10, 11, 12];
 
 const LS_KEY = 'la-visual-standards-v1';
 

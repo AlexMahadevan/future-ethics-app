@@ -498,6 +498,12 @@ input:focus, textarea:focus, select:focus {
 
 /* ---------- print (the take-home) ---------- */
 
+.morning { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hair); }
+.morning-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.morning ol { padding-left: 20px; margin: 0; }
+.morning li { margin: 4px 0; line-height: 1.45; }
+@media (max-width: 640px) { .morning-cols { grid-template-columns: 1fr; } }
+
 @media print {
   @page { size: letter portrait; margin: 0.6in; }
   .no-print, .bar, .sync, .present-nav { display: none !important; }
